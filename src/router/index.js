@@ -17,7 +17,9 @@ const routes = [
 		component:() => import('/src/components/Home.vue'),
 		meta:'主页',
 		children:[
+			//杨思
 			{
+<<<<<<< HEAD
 				path: '/appointment',
 				component:import('/src/components/si/Appointment.vue'),
 				name: '客户一览'
@@ -42,6 +44,40 @@ const routes = [
 			  }
 			 
 		 ]
+=======
+				path: '',
+				component:import('/src/components/shi/Appointment.vue'),
+				name: '资源'
+			},
+			//易湘君
+			{
+				path: '/children1',
+				component:import('/src/components/liang/Hetong.vue'),
+				name: '房源'
+			},
+			//刘亮
+			{
+				path: '/children2',
+				component:import('/src/components/liang/Hetong.vue'),
+				name: '合同'
+			},
+		//	文丽君
+			{
+				path: '/leaseback',
+				component:import('/src/components/li/Weixiu.vue'),
+				name: '租后'
+			},
+			//罗佳豪
+			{
+				path: '/children3',
+				component:import('/src/components/liang/Hetong.vue'),
+				name: '财务'
+			}
+
+
+
+		]
+>>>>>>> 868949d788d8549c0dd0c4cfcb9a3a2b0933ee4a
 	}
 
 ]

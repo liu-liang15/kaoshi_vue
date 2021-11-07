@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">太 极 找 房</h3>
+        <h3 class="title">太 极 哈哈哈 找 房</h3>
       </div>
       <el-form-item prop="username">
         <span class="svg-container">
@@ -47,7 +47,6 @@
 </template>
 
 <script>
-import { ElMessage } from 'element-plus'
 export default {
   setup() {
     const open4 = () => {
@@ -73,8 +72,8 @@ export default {
     return {
       flag: '',
       loginForm: {
-        username: '1003',
-        password: 'aaaaa'
+        username: '悟空',
+        password: '123456'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -107,20 +106,18 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.axios.post('system/user/login', { ygId: this.loginForm.username, yhMm: this.loginForm.password })
+          this.axios.post('getUser', { ygName: this.loginForm.username, password: this.loginForm.password })
               .then(responsee => {
-                if (responsee.status === 201){
-                  ElMessage.error(responsee.data)
+                if (responsee.data.code === 201){
+                  alert(responsee.data.message)
                   this.loading = false
                   return
                 }
                 if(responsee.data.code === 200){
-                  this.$store.state.token = responsee.data.data;
-                  sessionStorage.setItem("token",JSON.stringify(responsee.data.data))
+                  // this.$store.state.token = responsee.data.data;
+                  // sessionStorage.setItem("token",JSON.stringify(responsee.data.data))
                   //存state
-                  this.$router.push('/home')
-                }else if(responsee.data.code === 300){
-                  this.open4()
+                  this.$router.push('/zhuye')
                 }
                 this.loading = false
               }
