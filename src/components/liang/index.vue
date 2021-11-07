@@ -69,7 +69,7 @@ export default {
       shou:'',
       input:'',
       title: '弹框',
-      open: true,
+      open: false,
       a :'',
       xlk: [
         {
@@ -138,7 +138,6 @@ export default {
     }
   },
   created() {
-    this.qd()
   }
 }
 </script>

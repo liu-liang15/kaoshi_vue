@@ -15,11 +15,29 @@ const routes = [
 		component:() => import('/src/components/Home.vue'),
 		meta:'主页',
 		children:[
+			//杨思
 			{
-				path: '/register',
-				component:import('/src/components/shi/Register.vue'),
-				name: '登记'
+				path: '',
+				component:import('/src/components/shi/Appointment.vue'),
+				name: '资源'
+			},
+			//易湘君
+
+			//刘亮
+			{
+				path: '/children2',
+				component:import('/src/components/liang/Hetong.vue'),
+				name: '合同'
+			},
+		//	文丽君
+			{
+				path: '/leaseback',
+				component:import('/src/components/li/Weixiu.vue'),
+				name: '租后'
 			}
+
+
+
 		]
 	}
 
