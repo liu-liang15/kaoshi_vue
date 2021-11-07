@@ -22,7 +22,11 @@ const routes = [
 				name: '资源'
 			},
 			//易湘君
-
+			{
+				path: '/children1',
+				component:import('/src/components/liang/Hetong.vue'),
+				name: '房源'
+			},
 			//刘亮
 			{
 				path: '/children2',
@@ -34,6 +38,12 @@ const routes = [
 				path: '/leaseback',
 				component:import('/src/components/li/Weixiu.vue'),
 				name: '租后'
+			},
+			//罗佳豪
+			{
+				path: '/children3',
+				component:import('/src/components/liang/Hetong.vue'),
+				name: '财务'
 			}
 
 

@@ -50,7 +50,7 @@
         </router-link>
 
 
-        <router-link  :to="{path:'/children2'}">
+        <router-link  :to="{path:'/children1'}">
           <el-menu-item index="2">
             <template #title> 房 源 </template>
           </el-menu-item>
@@ -62,14 +62,18 @@
           </el-menu-item>
         </router-link>
 
+        <router-link  :to="{path:'/leaseback'}">
+          <el-menu-item index="4">
+            <template #title> 租 后 </template>
+          </el-menu-item>
+        </router-link>
 
-        <el-menu-item index="4">
-          <template #title> 租 后 </template>
-        </el-menu-item>
 
-        <el-menu-item index="5">
-          <template #title> 财 务 </template>
-        </el-menu-item>
+        <router-link  :to="{path:'/children3'}">
+          <el-menu-item index="5">
+            <template #title> 财 务 </template>
+          </el-menu-item>
+        </router-link>
 
       </el-menu>
 
