@@ -19,24 +19,27 @@
 							<el-menu-item index="1-4-1">新增角色</el-menu-item>
 						</el-submenu>
 					</el-submenu>
-					<el-menu-item index="2">
-						<i class="el-icon-menu"></i>
-						 <template #title>
-							<router-link to="/register">住院登记</router-link>
-						</template>
-					</el-menu-item>
-					<!-- 禁用：disabled -->
+				   <el-submenu>
+					   <el-menu-item index="2">
+						   <router-link to="/appointment">客源管理</router-link>
+					 </el-menu-item>
+					 <el-menu-item index="3">
+					 		  <router-link to="/yy">预约弹框</router-link>
+					 </el-menu-item>
 					 <el-menu-item index="4">
-						<i class="el-icon-setting"></i>
-						<template #title>
-							<!-- <router-link to="/transfer">穿梭框</router-link> -->
-						</template>
-					</el-menu-item>
+					 		  <router-link to="/supred">客源新增弹框</router-link>
+					 </el-menu-item>
+					 <el-menu-item index="5">
+					 		  <router-link to="/supre">新增预定</router-link>
+					 </el-menu-item>
+					  <el-menu-item index="6">
+					 		  <router-link to="/forwardShow">预约一览</router-link>
+					 </el-menu-item>
+					 </el-submenu>
 				 </el-menu>
 			</el-aside>
 			<el-container>
-				<!-- 视图区-->
-				<router-view />
+				 <router-view />
 				<el-main>
 				</el-main>
 				<el-footer>

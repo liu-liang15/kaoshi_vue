@@ -1,5 +1,7 @@
 import {createRouter,createWebHistory} from 'vue-router'
 
+
+ 
 //定义组件，定义路由
 const routes = [
 	//	登录页面
@@ -16,11 +18,30 @@ const routes = [
 		meta:'主页',
 		children:[
 			{
-				path: '/register',
-				component:import('/src/components/shi/Register.vue'),
-				name: '登记'
-			}
-		]
+				path: '/appointment',
+				component:import('/src/components/si/Appointment.vue'),
+				name: '客户一览'
+			},
+			{
+				path: '/forwardShow',
+				component:import('/src/components/si/ForwardShow.vue'),
+				name: '预约一览'
+			},{
+			 	path: '/supre',
+			 	component:import('/src/components/si/Supre.vue'),
+			 	name: '客源新增'
+			  },{
+			 	path: '/supred',
+			 	component:import('/src/components/si/SuPred.vue'),
+			 	name: '预定'
+			  },
+			  {
+			  	 path: '/yy',
+			  	 component:import('/src/components/si/YY.vue'),
+			  	 name: '预约弹框'
+			  }
+			 
+		 ]
 	}
 
 ]
