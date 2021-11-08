@@ -1,5 +1,7 @@
 import {createRouter,createWebHistory} from 'vue-router'
 
+
+ 
 //定义组件，定义路由
 const routes = [
 	//	登录页面
@@ -17,7 +19,6 @@ const routes = [
 		children:[
 			//杨思
 			{
-<<<<<<< HEAD
  
 				path: '/appointment',
 				component:import('/src/components/si/Appointment.vue'),
@@ -71,44 +72,11 @@ const routes = [
 		// 		component:import('/src/components/liang/Hetong.vue'),
 		// 		name: '财务'
 		// 	}
-=======
-				path: '',
-				component:import('/src/components/shi/Appointment.vue'),
-				name: '资源'
-			},
-			//易湘君
-			{
-				path: '/children1',
-				component:import('/src/components/liang/Hetong.vue'),
-				name: '房源'
-			},
-			//刘亮
-			{
-				path: '/children2',
-				component:import('/src/components/liang/Hetong.vue'),
-				name: '合同'
-			},
-		//	文丽君
-			{
-				path: '/leaseback',
-				component:import('/src/components/li/Weixiu.vue'),
-				name: '租后'
-			},
-			//罗佳豪
-			{
-				path: '/children3',
-				component:import('/src/components/ljh/Finance.vue'),
-				name: '财务'
-			}
->>>>>>> 61c244d4e0554f53edb0734914bca604a046c288
 
 
 
 		]
-<<<<<<< HEAD
  
-=======
->>>>>>> 61c244d4e0554f53edb0734914bca604a046c288
 	}
 
 ]

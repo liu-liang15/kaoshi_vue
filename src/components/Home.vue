@@ -1,5 +1,5 @@
 <template>
-<<<<<<< HEAD
+ 
   <el-container>
 		<el-header>首页部分</el-header>
 		 <el-container>
@@ -50,8 +50,7 @@
 		</el-container>
 	</el-container>
  
-=======
->>>>>>> 61c244d4e0554f53edb0734914bca604a046c288
+ 
   <el-container style="height: 100vh">
     <el-header class="bjtp">
       <img src="public/xhzf.jpg" style="height: 60px;float: left;display: inline-block">
@@ -195,10 +194,7 @@
       </el-form>
     </div>
   </el-drawer>
-<<<<<<< HEAD
  
-=======
->>>>>>> 61c244d4e0554f53edb0734914bca604a046c288
 </template>
 
 <script>
