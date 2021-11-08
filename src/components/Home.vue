@@ -1,55 +1,5 @@
 <template>
-<<<<<<< HEAD
-	<el-container>
-		<el-header>首页部分</el-header>
-		 <el-container>
-			<!-- 菜单区 -->
-			<el-aside width="200px">
-				 <el-menu :uniqueOpened="true" default-active="1" class="el-menu-vertical-demo" @open="handleOpen"
-					@close="handleClose" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
-					<el-submenu index="1">
-						<!-- 标题插槽完整版 -->
-						<template #title>
-							<i class="el-icon-location"></i><!-- 图标 -->
-						 </template>
-						<el-menu-item index="1-1">新增部门</el-menu-item>
-						<el-menu-item index="1-2">编辑部门</el-menu-item>
-						<el-submenu index="1-4">
-							<!-- 标题插槽迷你版 没有图标-->
-							<template #title>部门权限</template>
-							<el-menu-item index="1-4-1">新增角色</el-menu-item>
-						</el-submenu>
-					</el-submenu>
-				   <el-submenu>
-					   <el-menu-item index="2">
-						   <router-link to="/appointment">客源管理</router-link>
-					 </el-menu-item>
-					 <el-menu-item index="3">
-					 		  <router-link to="/yy">预约弹框</router-link>
-					 </el-menu-item>
-					 <el-menu-item index="4">
-					 		  <router-link to="/supred">客源新增弹框</router-link>
-					 </el-menu-item>
-					 <el-menu-item index="5">
-					 		  <router-link to="/supre">新增预定</router-link>
-					 </el-menu-item>
-					  <el-menu-item index="6">
-					 		  <router-link to="/forwardShow">预约一览</router-link>
-					 </el-menu-item>
-					 </el-submenu>
-				 </el-menu>
-			</el-aside>
-			<el-container>
-				 <router-view />
-				<el-main>
-				</el-main>
-				<el-footer>
-					底部底部
-				</el-footer>
-			</el-container>
-		</el-container>
-	</el-container>
-=======
+
   <el-container style="height: 100vh">
     <el-header class="bjtp">
       <img src="public/xhzf.jpg" style="height: 60px;float: left;display: inline-block">
@@ -139,7 +89,7 @@
     </el-container>
   </el-container>
 
-<!--  修改密码的弹框 -->
+  <!--  修改密码的弹框 -->
   <el-drawer
       v-model="drawer"
       title="修改密码"
@@ -198,7 +148,7 @@
     </div>
   </el-drawer>
 
-<!--  录入合同的弹框  -->
+  <!--  录入合同的弹框  -->
   <el-dialog
       title="录入合同"
       v-model="centerDialogVisible"
@@ -215,12 +165,12 @@
         <el-radio :label="0">已签纸质合同</el-radio>
       </el-radio-group>
       <el-form-item label="请选择房屋">
-<!--        <el-autocomplete-->
-<!--            v-model="heTongBd.fwId"-->
-<!--            :fetch-suggestions="querySearchAsync"-->
-<!--            placeholder="请输入内容"-->
-<!--            @select="handleSelect"-->
-<!--        ></el-autocomplete>-->
+        <!--        <el-autocomplete-->
+        <!--            v-model="heTongBd.fwId"-->
+        <!--            :fetch-suggestions="querySearchAsync"-->
+        <!--            placeholder="请输入内容"-->
+        <!--            @select="handleSelect"-->
+        <!--        ></el-autocomplete>-->
         <el-input v-model="heTongBd.fwId" style="width: 240px" placeholder="智能搜索" size="small"></el-input>
       </el-form-item>
       <el-form-item label="承租人:"><br/>
@@ -252,7 +202,7 @@
           </template>
         </el-table-column>
       </el-table>
-<!--      入住人表格结束   -->
+      <!--      入住人表格结束   -->
       <el-form-item label="合同信息:"><br/>
         <div class="block">
           <el-date-picker
@@ -366,20 +316,20 @@ export default{
         "zhuangTai": "0",
         //成交的员工
         "cjr": {
-            "kySurepreYg": null,
-            "ygId": 1108,
-            "ygName": "刘亮",
-            "password": null,
-            "gwId": null
-      },
+          "kySurepreYg": null,
+          "ygId": 1108,
+          "ygName": "刘亮",
+          "password": null,
+          "gwId": null
+        },
         "czrs": [],
-      //  签约的时间
-      "qysj": "2021-11-01 11:16:54",
+        //  签约的时间
+        "qysj": "2021-11-01 11:16:54",
         //房源实体
         "fyHousing": {
           "houseId": 1,
         }
-    },
+      },
       //合同录入的框
       centerDialogVisible: false,
       // 原密码
