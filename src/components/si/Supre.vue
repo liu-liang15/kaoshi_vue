@@ -2,16 +2,7 @@
 	 <div>
 		<div id="div_searchtop">
 			<div style="width: 820px;">
-				<el-date-picker
-				 style="width: 200px;margin-left: -100px;"
-				      v-model="value1"
-				      type="datetimerange"
-				      range-separator="To"
-				      start-placeholder="开始时间"
-				      end-placeholder="结束时间"
-				    >
-				    </el-date-picker>
-					<!-- 价格区间 -->
+				  <!-- 价格区间 -->
 				 <el-input v-model="input" placeholder="姓名电话" 
 				 class="select_div"/>
 				 <el-button size="small"   plain  style="margin-left:20px;background-color:skyblue ;color: white;" >查询</el-button>
@@ -28,14 +19,17 @@
 		 <!-- 客源表格    -->
 		<div id="div_user">
 			 <el-table :data="custominfo" style="width: 100%">
-				 <el-table-column   label="预定状态"> </el-table-column>
-				 <el-table-column   label="姓名" width="180"> </el-table-column>
-			    <el-table-column   label="电话" width="180"> </el-table-column>
-			    <el-table-column   label="签订人"> </el-table-column>
-				<el-table-column   label="剩余签约天数"> </el-table-column>
-				<el-table-column   label="定金金额"> </el-table-column>
-				<el-table-column   label="预定时间"> </el-table-column>
-				<el-table-column   label="房源地址"> </el-table-column>
+				 <el-table-column   label="预定状态" prop="kysurepres[0].kystatu.tname"> </el-table-column>
+				 <el-table-column   label="姓名" width="80" prop="cname"> </el-table-column>
+			    <el-table-column   label="电话" width="180" prop="ctel"> </el-table-column>
+			     <el-table-column   label="剩余签约天数"> </el-table-column>
+				<el-table-column   label="定金金额" prop="kysurepres[0].smoney"> </el-table-column>
+				<el-table-column   label="预定时间" prop="kysurepres[0].sutime">
+					<!-- <template #default="scope">
+						{{scope.row.bcdetailDate.substr(0,10)}}
+					</template> -->
+					</el-table-column>
+				<el-table-column   label="房源地址" prop="kyUneeds[0].uddress"> </el-table-column>
 				<el-table-column   label="相关操作"> 
 				<template #default="scope">
 					 <el-button size="mini" type="success" plain style="margin-left:2px;"
@@ -58,7 +52,14 @@
 					<el-row>
 						<el-col :span="12">
 							<el-form-item label="姓名" prop="cname" id="input_width">
-								<el-input v-model="cname"></el-input>
+							 <el-select v-model="user"
+							  @change="pickUser(user)"  
+							 placeholder="姓名" clearable="true" size="medium"
+								style="margin-left:13px;">
+								<el-option v-for="item in users" :key="item.cname" :label="item.cname" :value="item.cname">
+								</el-option>
+							</el-select>
+							
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
@@ -87,18 +88,11 @@
 					<el-row>
 						<el-col :span="12">
 							<el-form-item label="性别" prop="csex" id="input_width">
-								<el-input></el-input>
+								<el-input v-model="csex"></el-input>
 							</el-form-item>
 						</el-col>
-						<el-col :span="12">
-							<el-form-item label="租客年龄" prop="cage" id="input_width">
-								<el-input style="margin-left:13px;width: 160px;"></el-input>
-							</el-form-item>
-						</el-col>
-					</el-row>
-					 <el-row>
-						<el-col :span="24">
-							<el-form-item label="房源地址" prop="cage" id="input_width">
+						 <el-col :span="12">
+							<el-form-item label="房源地址"   id="input_width">
 								<el-select v-model="dzorigin" placeholder="房源地址" clearable="true" size="medium"
 									style="margin-left:13px;">
 									<el-option v-for="item in dzorigins" :key="item" :label="item" :value="item">
@@ -107,6 +101,7 @@
 							</el-form-item>
 						</el-col>
 					</el-row>
+					 
 				</el-form-item>
 			</el-form>
 			<div id="div_need" style="width: 670px;">预定信息</div>
@@ -114,36 +109,65 @@
 				<el-form-item>
 					<el-row>
 						<el-col :span="12">
-							<el-form-item label="定金" :label-width="formLabelWidth" id="input_width">
-								<el-input></el-input>
+							<el-form-item label="应收定金" 
+							:label-width="formLabelWidth" 
+							id="input_width"
+							style="width: 209px;">
+								<el-input v-model="markMon"></el-input>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="收定人" id="input_width">
-								<el-input></el-input>
+							<el-form-item label="收定人" id="input_width"  style="width: 193px;">
+								<el-input style="margin-left: 13px;"></el-input>
 							</el-form-item>
 						</el-col>
-	
+						
+					</el-row>
+					<el-row>
+						
+						<el-col :span="12">
+							<el-form-item label="签约时间" :label-width="formLabelWidth" id="input_width">
+								<el-date-picker
+								@change="pickUntime()"
+								 v-model="intime"
+								type="date" 
+								placeholder="预计签约时间" 
+								style="width: 200px;">
+								</el-date-picker>
+							</el-form-item>
+						 </el-col>
+						<el-col :span="12">
+							<el-form-item label="失效时间" :label-width="formLabelWidth" id="input_width">
+								<el-date-picker 
+								v-model="untime"
+								type="date" 
+								placeholder="签约失效时间" 
+								style="width: 200px;">
+								</el-date-picker>
+							</el-form-item>
+						</el-col>
 					</el-row>
 					<el-row>
 						<el-col :span="12">
-							<el-form-item label="签约失效时间" :label-width="formLabelWidth" id="input_width">
-								<el-date-picker type="date" placeholder="签约失效时间" style="width: 200px;">
-								</el-date-picker>
-							</el-form-item>
-						</el-col>
-						<el-col :span="12">
-							<el-form-item label="预计签约时间" :label-width="formLabelWidth" id="input_width">
-								<el-date-picker type="date" placeholder="预计签约时间" style="width: 200px;">
-								</el-date-picker>
+							<el-form-item label="收款账号"   id="input_width" style="width: 209px;">
+								 <el-select v-model="count"
+								  style="width: 139px;"
+								  @change="pickNum(count)"
+								 placeholder="收款账号" clearable="true" size="medium"
+									>
+									<el-option v-for="item in counts" 
+									:key="item.number" :label="item.number" :value="item.number">
+									</el-option>
+								</el-select> 
 							</el-form-item>
 						</el-col>
 					</el-row>
-	
 				</el-form-item>
 			</el-form>
 			<div style="width: 200px;margin-left: 450px;">
-				<el-button plain size="small" style="background-color: lightcoral;color: white;margin-left: -13px;">
+				<el-button plain size="small" 
+				style="background-color: lightcoral;color: white;margin-left: -13px;"
+				@click="addSupre()">
 					确认
 				</el-button>
 				<el-button plain size="small" style="background-color: skyblue;color: white;margin-left: 13px;"
@@ -157,6 +181,8 @@
 </template>
 
 <script>
+	import qs from 'qs'
+	import moment from 'moment'
 	export default {
 		data() {
 			return {
@@ -164,14 +190,107 @@
 				surepageSize:5,
 				surepageNo:1,
 				suretotal:1,
-				ydform:false
+				ydform:false,
+				users:[],
+				user:'',
+				cardnum:'',
+				ctel:'',
+				kyorigin:'',
+				kyorigins:[],
+				csex:'',
+				dzorigin:'',
+				dzorigins:[],
+				counts:[],//账号数组
+				count:'',//账号
+				untime:'',
+				intime:'',
+				markMon:'',
+				accountId:0,
+				scid:0,
+				custominfo:[]
+				
 			}
 		},methods:{
-			sureSizeChange(){
-				console.log("预定")
+			pickNum(item){
+			  if(item!=''){
+				for (var i = 0; i < this.counts.length; i++) {
+					if(item==this.counts[i].number){
+						this.accountId=this.counts[i].accountId;
+					 }
+				}
+				}
+			
 			},
-			sureCurrentChange(){
-				console.log("预定")
+			loadData(){
+				 this.axios.post("customer/moremres", {
+				 	pageNo: this.surepageNo,
+				 	pageSize: this.surepageSize
+				 }).then(res => {
+				 	console.log(res, "分页加载数据加载数据")
+				 	if(res.data.list.length!=0){
+				 		 this.custominfo=res.data.list;
+				 		this.suretotal=res.data.total;
+				 		this.surepageNo=res.data.pageNum;
+				 		this.surepageSize=res.data.pageSize;
+				 	}
+				 })
+			},
+			pickUntime(){
+				 let bdate=moment(this.intime).add(3,'days').toDate();
+				 this.untime=moment(bdate).format("YYYY-MM-DD"); 
+			 },
+			addSupre(){//新增的结果
+			// scid 客户信息  stid预定状态
+			console.log(this.intime,this.untime,this.accountId,this.scid,this.markMon,"121")
+			  this.axios.post("surepre/insert",{
+					 sutime:this.intime,
+					 suntime:this.untime,
+					 accountId:this.accountId,
+					 empid:0,//应该和登录账户挂钩
+					 stid:20,//默认预约状态是待处理
+					 scid:this.scid,
+					 smoney:this.markMon
+				 }).then(res=>{
+					 console.log(res,"新增的结果");
+				 })
+				 this.ydform=false;
+			},
+			pickUser(item){
+				 this.axios.post("customer/byname",{
+					cname:item
+				}).then(res=>{
+					console.log(res,"选择用户的值直至");
+					if(res.data.cardnum!=''){
+						this.cardnum=res.data.cardnum;
+						this.ctel=res.data.ctel;
+						this.csex=res.data.csex;
+						this.scid=res.data.cid;
+						this.kyorigins.push(res.data.ctype.tname);
+						if(res.data.kyUneeds.length!=0){
+							this.dzorigin=res.data.kyUneeds[0].uaddress;
+							let obj = {
+								city:this.dzorigin 
+							}
+							 /* 转换成对象的格式 */
+							let newObj = qs.stringify(obj);
+							 this.axios.post("surepre/byhname",newObj).then(res=>{
+								console.log(res,"根据地址查询的res");
+								this.markMon=res.data.houseFloorPrice*0.8;
+								 
+							})
+						}
+						 
+					}
+					console.log(res,"查询用户的信息:");
+				})
+			},
+			sureSizeChange(val){
+				this.surepageSize = val;
+				this.loadData();
+			 },
+			sureCurrentChange(val){
+				this.surepageNo = val;
+				this.loadData();
 			},
 			addPred(){
 				this.ydform=true;
@@ -179,7 +298,27 @@
 			backCu(){
 				this.$router.replace("/appointment");
 			},
+			loadAccount(){
+				this.axios.post("surepre/mes").then(res=>{
+					console.log(res,"countscountscountscounts")
+					this.counts=res.data;
+					 
+				})
+			},
+			loadUsers(){
+				this.axios.post("customer/mess").then(res=>{
+					if(res.data.length!=0){
+						this.users=res.data;
+					}
+					 
+				})
+			},
+			// customer/byname
 			
+		},mounted() {
+			this.loadUsers();
+			this.loadAccount();
+			this.loadData();
 		}
 	}
 </script>

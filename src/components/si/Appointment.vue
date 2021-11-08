@@ -1,11 +1,7 @@
 <template>
 	<div id="big_div">
 		<div id="div_top">
-			<el-select v-model="value" placeholder="区域">
-				<el-option v-for="item in areaops" :key="item.value" :label="item.label" :value="item.value">
-				</el-option>
-			</el-select>
-			<el-select v-model="value" placeholder="客户来源类型" class="select_div">
+			 <el-select v-model="value" placeholder="客户来源类型" class="select_div">
 				<el-option v-for="item in options" :key="item.tname" :label="item.tname" :value="item.tname">
 				</el-option>
 			</el-select>
@@ -38,19 +34,13 @@
 		</div>
 		<div id="div_user">
 			<el-table :data="custominfo" style="width: 100%">
-				<el-table-column label="姓名" width="180"> </el-table-column>
-				<el-table-column label="电话" width="180"> </el-table-column>
-				<el-table-column label="来源类型"> </el-table-column>
-				<el-table-column label="需求类型"> </el-table-column>
-				<el-table-column label="入住时间"> </el-table-column>
-				<el-table-column label="租期类型"> </el-table-column>
-				<el-table-column label="相关操作">
-					<template #default="scope">
-						<el-button size="mini" type="primary" plain>预约</el-button>
-						<el-button size="mini" type="success" plain style="margin-left:2px;">预定</el-button>
-					</template>
-				</el-table-column>
-			</el-table>
+				<el-table-column label="姓名" width="180" prop="cname"> </el-table-column>
+				<el-table-column label="电话" width="180" prop="ctel"> </el-table-column>
+				<el-table-column label="来源类型" prop="ctype.tname"> </el-table-column>
+				<el-table-column label="租期类型" prop="kyUneeds[0].utenancy.tname"> </el-table-column>
+				<el-table-column label="入住时间"  prop="kyUneeds[0].uIntime"> </el-table-column>
+				<el-table-column label="房源地址" prop="kyUneeds[0].uddress"> </el-table-column>
+			 </el-table>
 			<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pageNo"
 				:page-sizes="[1,5]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
 				:total="total">
@@ -87,10 +77,8 @@
 						</el-col>
 						<el-col :span="12">
 							<el-form-item label="租客来源" id="input_width">
-								<el-select v-model="origin"
-								 @change="chly(origin)"
-								placeholder="来源" clearable="true" size="medium"
-									style="margin-left:13px;">
+								<el-select v-model="origin" @change="chly(origin)" placeholder="来源" clearable="true"
+									size="medium" style="margin-left:13px;">
 									<el-option v-for="item in origins" :key="item.tname" :label="item.tname"
 										:value="item.tname">
 									</el-option>
@@ -118,30 +106,32 @@
 					<el-row>
 						<el-col :span="12">
 							<el-form-item label="需求类型" id="input_width">
-								<el-select v-model="needtype"
-								 placeholder="需求类型" clearable="true" style="height: 40px;"
-									size="medium">
-									<el-option v-for="item in needtypes" :key="item.tname" :label="item.tname" :value="item.tname">
+								<el-select v-model="needtype" @change="chtype(needtype)" placeholder="需求类型"
+									clearable="true" style="height: 40px;" size="medium">
+									<el-option v-for="item in needtypes" :key="item.tname" :label="item.tname"
+										:value="item.tname">
 									</el-option>
 								</el-select>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="入住时间" prop="ctel" id="input_width">
-								<el-date-picker v-model="value1" type="date" placeholder="入住时间" style="width: 200px;">
+							<el-form-item label="入住时间"   id="input_width">
+								<el-date-picker v-model="intime" 
+								type="datetime" placeholder="入住时间" style="width: 200px;">
 								</el-date-picker>
-							</el-form-item>
+							 </el-form-item>
 						</el-col>
 					</el-row>
 					<el-row>
 						<el-col :span="8">
 							<el-form-item label="需求地址" :label-width="formLabelWidth" id="input_width">
-								 <el-select v-model="addres"
-								  placeholder="需求地址" clearable="true" style="height: 40px;"
-								 	size="medium">
-								 	<el-option v-for="item in address" :key="item.city" :label="item.city" :value="item.city">
-								 	</el-option>
-								 </el-select>
+								<el-select v-model="addres" 
+								placeholder="需求地址" clearable="true" style="height: 40px;"
+									size="medium">
+									<el-option v-for="item in address" :key="item.city" :label="item.city"
+										:value="item.city">
+									</el-option>
+								</el-select>
 							</el-form-item>
 						</el-col>
 					</el-row>
@@ -163,6 +153,7 @@
 </template>
 
 <script>
+	import moment from 'moment'
 	export default {
 		data() {
 			return {
@@ -180,47 +171,70 @@
 				form: false, //新增客源的弹框
 				kyorigins: [], //客户来源数组
 				kyorigin: '', //客户来源
-				cname:'',
-				cardnum:'',
-				ctel:'',
-				csex:0,
-				cage:0,
-				cTypeid:0,
-				origins:[],
-				origin:'',
-				address:[],
-				addres:'',
-				need:'',
-				needtypes:[],
-				needtype:''
+				cname: '',
+				cardnum: '',
+				ctel: '',
+				csex: '',
+				cage: 0,
+				cTypeid: 0,
+				origins: [],
+				origin: '',
+				address: [],
+				addres: '',
+				need: '',
+				needtypes: [],
+				needtype: '',
+				typeid: 0,
+				intime: '',
+				ntid:0
 			}
 		},
 		methods: {
-			chly(origin){//获取来源类型
-			  if(origin!=''&& origin!=undefined){
-				  for (var i = 0; i < this.origins.length; i++) {
-					  if(origin==this.origins[i].tname){
-						  this.cTypeid=this.origins[i].tid;
-					 }
-				  }
-				 
-			 }
+			chly(origin) { //获取来源类型
+				if (origin != '' && origin != undefined) {
+					for (var i = 0; i < this.origins.length; i++) {
+						if (origin == this.origins[i].tname) {
+							this.typeid = this.origins[i].tid;
+						}
+					}
+
+				}
+			},
+			chtype(needtype) {
+				 if (needtype != '') {
+					for (var i = 0; i < this.needtypes.length; i++) {
+						if (needtype == this.needtypes[i].tname) {
+							this.ntid=this.needtypes[i].tid;
+						 }
+					}
+				}
 			},
 			addcus() { //新增客源
-		   console.log("111",this.addres)
-				this.axios.post("customer/add", {
-					cname:this.cname,
-					ctel:this.ctel,
-					cardnum:this.cardnum,
-					csex:this.csex,
-					cTypeid:this.cTypeid
-				}).then(res => {
-					console.log(res, "res")
-					if(res.code==200){
-						this.loadData();
+				 this.axios.get("customer/add", {
+					params: {
+						cname: this.cname,
+						ctel: this.ctel,
+						cardnum: this.cardnum,
+						csex: this.csex,
+						cTypeid: this.typeid
 					}
+				}).then(res => {
+					 let time=moment(this.intime).format('yyyy-MM-DD HH:mm:ss');
+					 // 出租类型    
+					if(res.data!=0){
+						this.axios.post("uneed/add",{
+							     ucid:res.data,
+							     uinitime:time,
+							     utenancytid:this.ntid,
+							      uaddress:this.addres
+						}).then(res=>{
+							console.log(res, "客源需求")
+						})
+					}
+
+ 
 				})
-				this.form=false;
+				this.form = false;
 			},
 			jumpYy() {
 				this.$router.replace("/forwardShow");
@@ -236,43 +250,54 @@
 				this.axios.post("typez/all", {
 					tcid: id
 				}).then(res => {
-					console.log(res, "获取到的结果")
 					this.options = res.data;
 					this.origins = res.data;
-				 })
+				})
 			},
-			loadNeeds(){
+			loadNeeds() {
 				this.axios.post("typez/all", {
 					tcid: 12
 				}).then(res => {
-					 this.needtypes=res.data;
-					console.log(this.needtypes, "12获取到的结果")
-				})
+					this.needtypes = res.data;
+				 })
 			},
-			loadData(){
-			console.log("加载数据")	
-			},
-			loadHouse(){
-				 this.axios.post("customer/allhouse").then(res=>{
-					console.log(res,"fangzi地址")
-					if(res.data.length!=0){
-						this.address=res.data;
+			loadData() {
+				  this.axios.post("customer/moremres", {
+					pageNo: this.pageNo,
+					pageSize: this.pageSize
+				}).then(res => {
+					console.log(res, "分页加载数据加载数据")
+					if(res.data.list.length!=0){
+						this.custominfo=res.data.list;
+						this.total=res.data.total;
+						this.pageNo=res.data.pageNum;
+						this.pageSize=res.data.pageSize;
 					}
-					
 				})
-			}
-			// handleSizeChange(){
+			},
+			loadHouse() {
+				this.axios.post("customer/allhouse").then(res => {
+					 if (res.data.length != 0) {
+						this.address = res.data;
+					}
 
-			// },
-			// handleCurrentChange(){
-
-			// } 
+				})
+			},
+			handleSizeChange(val) {
+				this.pageSize = val;
+				this.loadData();
+			},
+			handleCurrentChange(val){
+				this.pageNo = val;
+				this.loadData();
+			} 
 		},
 		mounted() {
-		    this.loadSelects(6);
+			this.loadSelects(6);
 			this.loadHouse();
-			this.loadNeeds()
-			// this.loadSelects(12);
+			this.loadNeeds();
+			this.loadData();
+		 
 		}
 	}
 </script>

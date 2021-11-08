@@ -1,6 +1,5 @@
 <template>
-<<<<<<< HEAD
-	<el-container>
+  <el-container>
 		<el-header>首页部分</el-header>
 		 <el-container>
 			<!-- 菜单区 -->
@@ -49,7 +48,7 @@
 			</el-container>
 		</el-container>
 	</el-container>
-=======
+ 
   <el-container style="height: 100vh">
     <el-header class="bjtp">
       <img src="public/xhzf.jpg" style="height: 60px;float: left;display: inline-block">
@@ -84,7 +83,7 @@
           </template>
         </el-dropdown>
       </el-menu>
-      <!--        ================      -->
+      
     </el-header>
 
     <el-container>
@@ -195,7 +194,7 @@
       </el-form>
     </div>
   </el-drawer>
->>>>>>> 868949d788d8549c0dd0c4cfcb9a3a2b0933ee4a
+ 
 </template>
 
 <script>
