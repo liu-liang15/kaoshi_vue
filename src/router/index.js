@@ -1,7 +1,7 @@
 import {createRouter,createWebHistory} from 'vue-router'
 
 
- 
+
 //定义组件，定义路由
 const routes = [
 	//	登录页面
@@ -19,7 +19,7 @@ const routes = [
 		children:[
 			//杨思
 			{
- 
+
 				path: '/appointment',
 				component:import('/src/components/si/Appointment.vue'),
 				name: '客户一览'
@@ -36,42 +36,47 @@ const routes = [
 			 	path: '/supred',
 			 	component:import('/src/components/si/SuPred.vue'),
 			 	name: '预定'
-			  }
-			 
-		 
-		// {path: '',
-		// 		component:import('/src/components/shi/Appointment.vue'),
-		// 		name: '资源'
-		// 	},
+			  },
+			  {
+			  	 path: '/yy',
+			  	 component:import('/src/components/si/YY.vue'),
+			  	 name: '预约弹框'
+			  },
+
+
+			{path: '',
+				component:import('/src/components/shi/Appointment.vue'),
+				name: '资源'
+			},
 		// 	//易湘君
-		// 	{
-		// 		path: '/children1',
-		// 		component:import('/src/components/liang/Hetong.vue'),
-		// 		name: '房源'
-		// 	},
+			{
+				path: '/children1',
+				component:import('/src/components/liang/Hetong.vue'),
+				name: '房源'
+			},
 		// 	//刘亮
-		// 	{
-		// 		path: '/children2',
-		// 		component:import('/src/components/liang/Hetong.vue'),
-		// 		name: '合同'
-		// 	},
+			{
+				path: '/children2',
+				component:import('/src/components/liang/Hetong.vue'),
+				name: '合同'
+			},
 		// //	文丽君
-		// 	{
-		// 		path: '/leaseback',
-		// 		component:import('/src/components/li/Weixiu.vue'),
-		// 		name: '租后'
-		// 	},
+			{
+				path: '/leaseback',
+				component:import('/src/components/li/Weixiu.vue'),
+				name: '租后'
+			},
 		// 	//罗佳豪
-		// 	{
-		// 		path: '/children3',
-		// 		component:import('/src/components/liang/Hetong.vue'),
-		// 		name: '财务'
-		// 	}
+			{
+				path: '/children3',
+				component:import('/src/components/jia/Finance.vue'),
+				name: '财务'
+			}
 
 
 
 		]
- 
+
 	}
 
 ]
