@@ -27,23 +27,20 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="drawer = true">房源录入</el-dropdown-item>
-              <el-dropdown-item  @click="centerDialogVisible=!centerDialogVisible">合同录入</el-dropdown-item>
               <el-dropdown-item  @click="logout()">添加预订</el-dropdown-item>
               <el-dropdown-item  @click="logout()">添加记账</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
       </el-menu>
-      <!--        ================      -->
+      
     </el-header>
 
     <el-container>
 
       <el-menu
           default-active="1-4-1"
-          class="el-menu-vertical-demo"
-
-      >
+          class="el-menu-vertical-demo" >
         <router-link  :to="{path:'/zhuye'}">
           <el-menu-item index="1">
             <template #title > 客 源 </template>
@@ -88,8 +85,11 @@
       </el-main>
     </el-container>
   </el-container>
+<<<<<<< HEAD
 
   <!--  修改密码的弹框 -->
+=======
+>>>>>>> cc91074a2dd6f7da43e973508a2ff83a915c6583
   <el-drawer
       v-model="drawer"
       title="修改密码"
@@ -147,6 +147,7 @@
       </el-form>
     </div>
   </el-drawer>
+<<<<<<< HEAD
 
   <!--  录入合同的弹框  -->
   <el-dialog
@@ -227,10 +228,17 @@
 
 
 
+=======
+<<<<<<< HEAD
+ 
+=======
+>>>>>>> 61c244d4e0554f53edb0734914bca604a046c288
+>>>>>>> cc91074a2dd6f7da43e973508a2ff83a915c6583
 </template>
 
 <script>
 import { defineComponent, ref, onMounted } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { ElNotification } from 'element-plus'
 
 export default{
@@ -238,7 +246,7 @@ export default{
     const open1 = () => {
       ElNotification({
         title: '提示',
-        message: '成功！',
+        message: '修改成功！',
         type: 'success',
       })
     }
@@ -260,6 +268,7 @@ export default{
   },
   data() {
     return {
+<<<<<<< HEAD
       shortcuts: [
         {
           text: '最近一周',
@@ -332,6 +341,8 @@ export default{
       },
       //合同录入的框
       centerDialogVisible: false,
+=======
+>>>>>>> cc91074a2dd6f7da43e973508a2ff83a915c6583
       // 原密码
       password: '',
       // 密码的提示
@@ -351,33 +362,6 @@ export default{
     }
   },
   methods: {
-    xzht(){
-      this.centerDialogVisible=false;
-      this.heTongBd.htksSj=this.value1[0].getFullYear() + "-" + (this.value1[0].getMonth() + 1) + "-" + this.value1[0].getDate();
-      this.heTongBd.htdqSj=this.value1[1].getFullYear() + "-" + (this.value1[1].getMonth() + 1) + "-" + this.value1[1].getDate();
-      this.axios.post("xzHeTong",this.heTongBd).then(req => {
-        console.log(req.data)
-      })
-      this.open1()
-    },
-    //同住人新增一行
-    addTable() {
-      this.bgxs=true;
-      let htRuZhur = {
-        "name": "",
-        "phone": "",
-        "sfz": "",
-        "fjId" : ''
-
-      }
-      this.heTongBd.czrs.push(htRuZhur);
-
-    },
-    //车辆删除一行
-    handleDelete(index, row) {
-      console.log(index, row);
-      this.heTongBd.czrs.splice(index, 1);
-    },
     updatepsw(){
       if (this.loginForm.yhMm.length<5){
         this.tishi="密码长度不能小于5！"
@@ -407,7 +391,7 @@ export default{
     },
     //退出登录
     logout() {
-      this.$router.push('/')
+      this.$router.push('/login')
     }
   },
   created() {
@@ -478,25 +462,30 @@ export default{
   line-height: 400px; */
 }
 
-.el-submenu {
+.el-submenu .el-menu-item {
   height: 50px;
   line-height: 29px;
   padding: 0 45px;
   min-width: 200px;
 }
 
+.elformbd .el-row .el-col .el-form-item .el-form-item__label {
+  width: 80px;
+}
 
 .bjtp{
   background-color: white;
 }
 .drawer2{
-  margin-left: 20px;
+  margin-left: 100px;
   width: 300px;
 }
-
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 100px;
   min-height: 400px;
+}
+.router-link-active {
+  text-decoration: none;
 }
 a {
   text-decoration: none;
