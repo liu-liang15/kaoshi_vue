@@ -1,9 +1,6 @@
 <template>
-	<!--
-	页面示例
-	 ，，，，价格区间-->
 	<div id="big_div ">
-		<el-tabs v-model="activeName" @tab-click="handleClick">
+		<el-tabs v-model="activeName" >
 		    <el-tab-pane label="租 客 合 同" name="first">
 				 <div id="div_top">
            <el-radio-group v-model="radio" @change="gethtlist">
@@ -23,7 +20,7 @@
              <el-table-column label="操作" align="center" >
                <template #default="scope">
                  <el-checkbox v-model="scope.row.zhuangTai"></el-checkbox>
-                 <el-button type="success" plain style="margin-left: 30px" size="mini"> 查看详情 </el-button>
+                 <el-button type="success" plain style="margin-left: 30px" size="mini" @click="ckxq(scope.row)"> 查看详情 </el-button>
                </template>
 
              </el-table-column>>
@@ -148,6 +145,93 @@
       <el-table-column prop="hfjl" label="回访记录"> </el-table-column>
     </el-table>
   </el-drawer>
+<!--  回访结束  -->
+
+
+  <!--  查看合同详情开始  -->
+  <el-dialog
+      title="合 同 详 情"
+      v-model="htxqtk"
+      width="90%"
+      destroy-on-close
+      center
+  >
+
+      <div class="block">
+        <el-avatar :size="50" >{{htxq.czrPojo.name}}</el-avatar>
+        电话：{{ htxq.czrPojo.phone }} 身份证：{{ htxq.czrPojo.sfz }}
+        <el-button type="success" plain style="margin-left: 30px" size="mini" @click="opendh(htxq.czrPojo)">修改电话</el-button>
+      </div>
+<!--    房 源 信 息   -->
+      <div style="margin-top: 28px">
+        <p style="font-size: 18px">房 源 信 息</p>
+        <div class="mydiv">
+          地址：{{htxq.fyHousing.city}}<br/>
+          租金：{{htxq.fyHousing.city}}/月<br/>
+        </div>
+        <div class="mydiv" >
+          房屋信息：{{htxq.fyHousing.roomNum}}{{htxq.fyHousing.hall}}{{htxq.fyHousing.defend}}{{htxq.fyHousing.kitchen}}<br/>
+          房间大小：{{htxq.fyHousing.houseMeters}}
+        </div>
+        <div>
+          房屋类型：{{ htxq.fyHousing.jointRent === 0?'整租':'合租'}}<br/>
+          房屋特点：{{ htxq.fyHousing.houseProperty }}
+        </div>
+      </div>
+<!--    合 同 信 息 -->
+    <div style="margin-top: 28px">
+      <p style="font-size: 18px">合 同 信 息</p>
+      <div class="mydiv">
+        合同编号：{{htxq.heTong.htId}}<br/>
+        签约时间：{{htxq.heTong.qysj}}<br/>
+      </div>
+      <div class="mydiv" >
+        合同开始时间：{{htxq.heTong.htksSj}}<br/>
+        合同结束时间：{{htxq.heTong.htdqSj}}<br/>
+      </div>
+      <div>
+        押金：{{htxq.heTong.yaJing}}<br/>
+        租金：{{htxq.heTong.zhuJing}}<br/>
+        提前付款天数：{{htxq.heTong.tqfk}}<br/>
+      </div>
+    </div>
+<!--  签约信息 -->
+    <div style="margin-top: 28px">
+      <p style="font-size: 18px">签 约 信 息</p>
+      <div class="mydiv">
+        地址：{{htxq.fyHousing.city}}<br/>
+
+      </div>
+      <div class="mydiv" >
+        房屋信息：{{htxq.fyHousing.roomNum}}{{htxq.fyHousing.hall}}{{htxq.fyHousing.defend}}{{htxq.fyHousing.kitchen}}<br/>
+        房间大小：{{htxq.fyHousing.houseMeters}}
+      </div>
+      <div>
+        房屋类型：{{ htxq.fyHousing.jointRent === 0?'整租':'合租'}}<br/>
+        房屋特点：{{ htxq.fyHousing.houseProperty }}
+      </div>
+    </div>
+<!--    同住人信息 -->
+    <div style="margin-top: 28px">
+      <p style="font-size: 18px">同 住 人 信 息</p>
+      <el-table :data="htxq.czrs" stripe style="width: 80%;margin:0 auto">
+        <el-table-column prop="name" label="姓名" width="180" align="center"> </el-table-column>
+        <el-table-column prop="phone" label="电话号码" width="180" align="center"> </el-table-column>
+        <el-table-column prop="sfz" label="身份证" align="center"> </el-table-column>
+        <el-table-column label="操作" align="center">
+          <template #default="scope">
+            <el-button type="success" plain style="margin-left: 30px" size="mini" @click="opendh(scope.row)">
+              修改电话
+            </el-button>
+            <el-button type="success" plain style="margin-left: 30px" size="mini" @click="opensc(scope.row.rzId)">
+              删 除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+  </el-dialog>
+  <!--  查看合同详情结束  -->
 </template>
 
 <script>
@@ -155,6 +239,7 @@ import { defineComponent, ref } from 'vue'
 	export default {
 			data() {
 				return {
+          htxqtk: false,
 				  hfjl: [],
           drawer: false,
           textarea: ref(''),
@@ -208,10 +293,119 @@ import { defineComponent, ref } from 'vue'
               },
               "fw_id": "1",
               "qysj":''
+            },
+          // 合同详情
+            htxq : {
+              czrPojo: {
+                "rzId": 20001,
+                "name": "刘亮",
+                "phone": "10086",
+                "sfz": "sfz",
+                "fjId": null
+              },
+              "czrs": [
+                {
+                  "rzId": 20002,
+                  "name": "猴子",
+                  "phone": "10010",
+                  "sfz": "6666666",
+                  "fjId": "20001"
+                }
+              ],
+              "heTong": {
+                "zjId": 3319,
+                "htId": "HT20211108023242",
+                "fwId": "1",
+                "czr": "20001",
+                "czrPojo": null,
+                "czrs": null,
+                "htksSj": "2021-11-01",
+                "htdqSj": "2021-12-31",
+                "zhuJing": 8600.00,
+                "yaJing": 2000.00,
+                "tqfk": 3,
+                "zhuangTai": "0",
+                "cjr": null,
+                "cjr2": "1108",
+                "qysj": "2021-11-08 02:32:42",
+                "fyHousing": null
+              },
+              "fyHousing": {
+                "houseId": 1,
+                "city": "湖南省株洲市区玫瑰小区1单元201室",
+                "userId": "1",
+                "roomNum": "2室",
+                "hall": "1厅",
+                "defend": "1卫",
+                "kitchen": "1厨",
+                "inLayers": "2",
+                "totalCeng": "6",
+                "orientationId": 1,
+                "houseMeters": "700",
+                "fitmentId": 1,
+                "houserRentDate": "2021-11-06 14:58:29",
+                "rentalPrices": 5000.00,
+                "houseFloorPrice": 4500.00,
+                "housePaymentMethod": "押一付三",
+                "featureId": 1,
+                "houseProperty": "房屋极大，环境优美",
+                "homeState": 0,
+                "jointRent": 0,
+                "natureId": 1
+              }
             }
 				}
 			},
     methods:{
+      opendh(czr) {
+        this.$prompt('请输入新的电话', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        })
+            .then(({ value }) => {
+                  czr.phone=value
+              console.log(czr)
+                  this.axios.post("xgdh",czr).then(req=>{
+                    this.$message({
+                      type: 'success',
+                      message: '修改成功!',
+                    })
+                  })
+            })
+            .catch(() => {
+              this.$message({
+                type: 'info',
+                message: '取消修改',
+              })
+            })
+      },
+      opensc() {
+        this.$confirm('删除同住人？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        })
+            .then(() => {
+              this.$message({
+                type: 'success',
+                message: '删除成功!',
+              })
+            })
+            .catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消删除',
+              })
+            })
+      },
+			  // 查看合同详情
+      ckxq(row){
+        this.htxqtk=true
+        this.axios("htxq/"+row.htId).then( req =>{
+          this.htxq=req.data.data
+          console.log(this.htxq)
+        })
+      },
 			//  查看回访记录
       ckhfjl(htId){
         this.drawer=true
@@ -268,6 +462,11 @@ import { defineComponent, ref } from 'vue'
 </script>
 
 <style scoped="scoped">
+  .mydiv{
+    margin: 1px;
+    width: 32%;
+    float: left;
+  }
 	.select_div{
 		 width: 200px;
 		 margin-left:10px;
