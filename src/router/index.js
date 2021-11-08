@@ -36,11 +36,6 @@ const routes = [
 			 	path: '/supred',
 			 	component:import('/src/components/si/SuPred.vue'),
 			 	name: '预定'
-			  },
-			  {
-			  	 path: '/yy',
-			  	 component:import('/src/components/si/YY.vue'),
-			  	 name: '预约弹框'
 			  }
 			 
 		 

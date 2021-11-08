@@ -1,5 +1,4 @@
 <template>
-<<<<<<< HEAD
   <el-container>
 		<el-header>首页部分</el-header>
 		 <el-container>
@@ -24,18 +23,6 @@
 					   <el-menu-item index="2">
 						   <router-link to="/appointment">客源管理</router-link>
 					 </el-menu-item>
-					 <el-menu-item index="3">
-					 		  <router-link to="/yy">预约弹框</router-link>
-					 </el-menu-item>
-					 <el-menu-item index="4">
-					 		  <router-link to="/supred">客源新增弹框</router-link>
-					 </el-menu-item>
-					 <el-menu-item index="5">
-					 		  <router-link to="/supre">新增预定</router-link>
-					 </el-menu-item>
-					  <el-menu-item index="6">
-					 		  <router-link to="/forwardShow">预约一览</router-link>
-					 </el-menu-item>
 					 </el-submenu>
 				 </el-menu>
 			</el-aside>
@@ -50,9 +37,8 @@
 		</el-container>
 	</el-container>
  
-=======
->>>>>>> 61c244d4e0554f53edb0734914bca604a046c288
-  <el-container style="height: 100vh">
+ 
+  <!-- <el-container style="height: 100vh">
     <el-header class="bjtp">
       <img src="public/xhzf.jpg" style="height: 60px;float: left;display: inline-block">
       <h1 style="position: absolute;left: 140px; font-size: 20px;"> 象 盒 找  房 - - - - - 找 房 大 平 台</h1>
@@ -137,7 +123,7 @@
         <router-view></router-view>
       </el-main>
     </el-container>
-  </el-container>
+  </el-container> -->
   <el-drawer
       v-model="drawer"
       title="修改密码"
@@ -195,10 +181,7 @@
       </el-form>
     </div>
   </el-drawer>
-<<<<<<< HEAD
  
-=======
->>>>>>> 61c244d4e0554f53edb0734914bca604a046c288
 </template>
 
 <script>

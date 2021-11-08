@@ -3,9 +3,12 @@
 		<div id="div_searchtop">
 			<div style="width: 820px;">
 				  <!-- 价格区间 -->
-				 <el-input v-model="input" placeholder="姓名电话" 
+				 <el-input v-model="name" placeholder="姓名" 
 				 class="select_div"/>
-				 <el-button size="small"   plain  style="margin-left:20px;background-color:skyblue ;color: white;" >查询</el-button>
+				 <el-button size="small"  
+				  plain 
+				   @click="searchLike()"
+				  style="margin-left:20px;background-color:skyblue ;color: white;" >查询</el-button>
 			<el-button plain size="small" style="background-color: lightcoral;color: white;margin-left: 13px;" @click="addPred()">
 				 新增预定
 			</el-button>
@@ -22,14 +25,9 @@
 				 <el-table-column   label="预定状态" prop="kysurepres[0].kystatu.tname"> </el-table-column>
 				 <el-table-column   label="姓名" width="80" prop="cname"> </el-table-column>
 			    <el-table-column   label="电话" width="180" prop="ctel"> </el-table-column>
-			     <el-table-column   label="剩余签约天数"> </el-table-column>
-				<el-table-column   label="定金金额" prop="kysurepres[0].smoney"> </el-table-column>
-				<el-table-column   label="预定时间" prop="kysurepres[0].sutime">
-					<!-- <template #default="scope">
-						{{scope.row.bcdetailDate.substr(0,10)}}
-					</template> -->
-					</el-table-column>
-				<el-table-column   label="房源地址" prop="kyUneeds[0].uddress"> </el-table-column>
+			     <el-table-column   label="定金金额" prop="kysurepres[0].smoney"> </el-table-column>
+				<el-table-column   label="预定时间" prop="kysurepres[0].sutime"></el-table-column>
+				 <el-table-column   label="房源地址" prop="kyUneeds[0].uddress"> </el-table-column>
 				<el-table-column   label="相关操作"> 
 				<template #default="scope">
 					 <el-button size="mini" type="success" plain style="margin-left:2px;"
@@ -207,10 +205,26 @@
 				markMon:'',
 				accountId:0,
 				scid:0,
-				custominfo:[]
+				custominfo:[],
+				name:''
 				
 			}
 		},methods:{
+			searchLike(){
+				  this.axios.post("customer/morelike",{
+					cname:this.name,
+					pageNo: this.surepageNo,
+					pageSize: this.surepageSize
+				}).then(res=>{
+					console.log(res,"获取res")
+					if(res.data.list.length!=0){
+						 this.custominfo=res.data.list;
+						this.suretotal=res.data.total;
+						this.surepageNo=res.data.pageNum;
+						this.surepageSize=res.data.pageSize;
+					}
+				})
+			},
 			pickNum(item){
 			  if(item!=''){
 				for (var i = 0; i < this.counts.length; i++) {

@@ -1,38 +1,32 @@
 <template>
 	<div id="big_div">
 		<div id="div_top">
-			 <el-select v-model="value" placeholder="客户来源类型" class="select_div">
+			 <el-select v-model="value" 
+			 @change="pickLx(value)"
+			 placeholder="客户来源类型" 
+			 class="select_div">
 				<el-option v-for="item in options" :key="item.tname" :label="item.tname" :value="item.tname">
 				</el-option>
 			</el-select>
-			<el-select v-model="need" placeholder="需求类型" class="select_div">
-				<el-option v-for="item in needops" :key="item.tname" :label="item.tname" :value="item.tname">
-				</el-option>
-			</el-select>
-			<el-select v-model="value" placeholder="租期" class="select_div">
-				<el-option v-for="item in tenencyops" :key="item.value" :label="item.label" :value="item.value">
-				</el-option>
-			</el-select>
-			<el-input v-model="input" placeholder="姓名电话" class="select_div" />
+			 <!--  -->
+			<el-button plain size="small" style="background-color: lightcoral;color: white;margin-left: 13px;"
+				@click="opencus()">
+				新增客源
+			</el-button>
+			<el-button size="small" 
+			@click="searchGroup()"
+			plain style="margin-left:10px;background-color:skyblue ;color: white;">
+				查询</el-button>
+			<el-button size="small" plain style="margin-left:10px;background-color:thistle ;color: white;"
+				@click="jumpYd()">
+				预定一览</el-button>
+			<el-button size="small" @click="jumpYy()" plain
+				style="margin-left:10px;background-color:palevioletred ;color: white;">
+				预约一览</el-button>
+			<!--  -->
 		</div>
 		<!-- 客源表格-->
-		<div id="div_btn">
-			<div style="width: 400px;margin-left:50px;margin-top: 10px;">
-				<el-button plain size="small" style="background-color: lightcoral;color: white;margin-left: -13px;"
-					@click="opencus()">
-					新增客源
-				</el-button>
-				<el-button size="small" plain style="margin-left:10px;background-color:skyblue ;color: white;">
-					查询</el-button>
-				<el-button size="small" plain style="margin-left:10px;background-color:thistle ;color: white;"
-					@click="jumpYd()">
-					预定一览</el-button>
-				<el-button size="small" @click="jumpYy()" plain
-					style="margin-left:10px;background-color:palevioletred ;color: white;">
-					预约一览</el-button>
-			</div>
-		</div>
-		<div id="div_user">
+		 <div id="div_user">
 			<el-table :data="custominfo" style="width: 100%">
 				<el-table-column label="姓名" width="180" prop="cname"> </el-table-column>
 				<el-table-column label="电话" width="180" prop="ctel"> </el-table-column>
@@ -157,13 +151,14 @@
 	export default {
 		data() {
 			return {
+				hnum:'',
 				options: [], //客户来源类型
 				value: '',
 				needops: [], //需求类型
 				tenencyops: [], //租期类型
 				areaops: [], //区域类型
 				custominfo: [], //客源信息
-				pageSize: 1,
+				pageSize: 5,
 				pageNo: 1,
 				total: 1,
 				periods: [], //周期
@@ -186,10 +181,39 @@
 				needtype: '',
 				typeid: 0,
 				intime: '',
-				ntid:0
+				ntid:0,
+				intext:'',//姓名
+				lyid:0
 			}
 		},
 		methods: {
+			pickLx(item){
+				console.log(item,"item")
+				if(item!=''){
+					for (var i = 0; i < this.options.length; i++) {
+						if (item == this.options[i].tname) {
+							this.lyid = this.origins[i].tid;
+							console.log(this.lyid,"获取到地来源id")
+						}
+					}
+				}
+			},
+			searchGroup(){//组合查询
+				console.log(this.value,"组合查询...",this.intext)
+				this.axios.post("customer/group",{
+						cTypeid:this.lyid,
+					     pageNo:this.pageNo,
+					     pageSize:this.pageSize
+						 
+				}).then(res=>{
+					console.log(res,"组合查询地结果")
+					this.custominfo=res.data.list;
+					this.total=res.data.total;
+					this.pageNo=res.data.pageNum;
+					this.pageSize=res.data.pageSize;
+					
+				})
+			},
 			chly(origin) { //获取来源类型
 				if (origin != '' && origin != undefined) {
 					for (var i = 0; i < this.origins.length; i++) {
@@ -229,6 +253,7 @@
 							      uaddress:this.addres
 						}).then(res=>{
 							console.log(res, "客源需求")
+							this.loadData();
 						})
 					}
 
