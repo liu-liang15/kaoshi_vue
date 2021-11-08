@@ -3,12 +3,12 @@
   <el-container style="height: 100vh">
     <el-header class="bjtp">
       <img src="public/xhzf.jpg" style="height: 60px;float: left;display: inline-block">
-      <h1 style="position: absolute;left: 140px; font-size: 20px;"> 象 盒 找  房 - - - - - 找 房 大 平 台</h1>
+      <h1 style="position: absolute;left: 140px; font-size: 20px;"> 象 盒 找  房 - - - - - 找 房 大 平 台 </h1>
 
       <el-menu class="el-menu-demo">
         <el-dropdown>
         <span class="el-dropdown-link" style="color: black;font-size: 16px;">
-           刘 亮
+          {{dlyg.ygName}}
         </span>
           <template #dropdown>
             <el-dropdown-menu>
@@ -27,21 +27,24 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click="drawer = true">房源录入</el-dropdown-item>
+              <el-dropdown-item  @click="centerDialogVisible=!centerDialogVisible">合同录入</el-dropdown-item>
               <el-dropdown-item  @click="logout()">添加预订</el-dropdown-item>
               <el-dropdown-item  @click="logout()">添加记账</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
       </el-menu>
-      
+      <!--        ================      -->
     </el-header>
 
     <el-container>
 
       <el-menu
           default-active="1-4-1"
-          class="el-menu-vertical-demo" >
-        <router-link  :to="{path:'/zhuye'}">
+          class="el-menu-vertical-demo"
+
+      >
+        <router-link  :to="{path:'/appointment'}">
           <el-menu-item index="1">
             <template #title > 客 源 </template>
           </el-menu-item>
@@ -85,11 +88,8 @@
       </el-main>
     </el-container>
   </el-container>
-<<<<<<< HEAD
 
-  <!--  修改密码的弹框 -->
-=======
->>>>>>> cc91074a2dd6f7da43e973508a2ff83a915c6583
+<!--  修改密码的弹框 -->
   <el-drawer
       v-model="drawer"
       title="修改密码"
@@ -147,9 +147,8 @@
       </el-form>
     </div>
   </el-drawer>
-<<<<<<< HEAD
 
-  <!--  录入合同的弹框  -->
+<!--  录入合同的弹框  -->
   <el-dialog
       title="录入合同"
       v-model="centerDialogVisible"
@@ -166,12 +165,12 @@
         <el-radio :label="0">已签纸质合同</el-radio>
       </el-radio-group>
       <el-form-item label="请选择房屋">
-        <!--        <el-autocomplete-->
-        <!--            v-model="heTongBd.fwId"-->
-        <!--            :fetch-suggestions="querySearchAsync"-->
-        <!--            placeholder="请输入内容"-->
-        <!--            @select="handleSelect"-->
-        <!--        ></el-autocomplete>-->
+<!--        <el-autocomplete-->
+<!--            v-model="heTongBd.fwId"-->
+<!--            :fetch-suggestions="querySearchAsync"-->
+<!--            placeholder="请输入内容"-->
+<!--            @select="handleSelect"-->
+<!--        ></el-autocomplete>-->
         <el-input v-model="heTongBd.fwId" style="width: 240px" placeholder="智能搜索" size="small"></el-input>
       </el-form-item>
       <el-form-item label="承租人:"><br/>
@@ -203,7 +202,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <!--      入住人表格结束   -->
+<!--      入住人表格结束   -->
       <el-form-item label="合同信息:"><br/>
         <div class="block">
           <el-date-picker
@@ -228,17 +227,10 @@
 
 
 
-=======
-<<<<<<< HEAD
- 
-=======
->>>>>>> 61c244d4e0554f53edb0734914bca604a046c288
->>>>>>> cc91074a2dd6f7da43e973508a2ff83a915c6583
 </template>
 
 <script>
 import { defineComponent, ref, onMounted } from 'vue'
-import { defineComponent, ref } from 'vue'
 import { ElNotification } from 'element-plus'
 
 export default{
@@ -246,7 +238,7 @@ export default{
     const open1 = () => {
       ElNotification({
         title: '提示',
-        message: '修改成功！',
+        message: '成功！',
         type: 'success',
       })
     }
@@ -268,7 +260,9 @@ export default{
   },
   data() {
     return {
-<<<<<<< HEAD
+      //当前登录的员工
+      dlyg:"",
+
       shortcuts: [
         {
           text: '最近一周',
@@ -325,24 +319,22 @@ export default{
         "zhuangTai": "0",
         //成交的员工
         "cjr": {
-          "kySurepreYg": null,
-          "ygId": 1108,
-          "ygName": "刘亮",
-          "password": null,
-          "gwId": null
-        },
+            "kySurepreYg": null,
+            "ygId": 1108,
+            "ygName": "刘亮",
+            "password": null,
+            "gwId": null
+      },
         "czrs": [],
-        //  签约的时间
-        "qysj": "2021-11-01 11:16:54",
+      //  签约的时间
+      "qysj": "2021-11-01 11:16:54",
         //房源实体
         "fyHousing": {
           "houseId": 1,
         }
-      },
+    },
       //合同录入的框
       centerDialogVisible: false,
-=======
->>>>>>> cc91074a2dd6f7da43e973508a2ff83a915c6583
       // 原密码
       password: '',
       // 密码的提示
@@ -362,6 +354,33 @@ export default{
     }
   },
   methods: {
+    xzht(){
+      this.centerDialogVisible=false;
+      this.heTongBd.htksSj=this.value1[0].getFullYear() + "-" + (this.value1[0].getMonth() + 1) + "-" + this.value1[0].getDate();
+      this.heTongBd.htdqSj=this.value1[1].getFullYear() + "-" + (this.value1[1].getMonth() + 1) + "-" + this.value1[1].getDate();
+      this.axios.post("xzHeTong",this.heTongBd).then(req => {
+        console.log(req.data)
+      })
+      this.open1()
+    },
+    //同住人新增一行
+    addTable() {
+      this.bgxs=true;
+      let htRuZhur = {
+        "name": "",
+        "phone": "",
+        "sfz": "",
+        "fjId" : ''
+
+      }
+      this.heTongBd.czrs.push(htRuZhur);
+
+    },
+    //车辆删除一行
+    handleDelete(index, row) {
+      console.log(index, row);
+      this.heTongBd.czrs.splice(index, 1);
+    },
     updatepsw(){
       if (this.loginForm.yhMm.length<5){
         this.tishi="密码长度不能小于5！"
@@ -391,11 +410,15 @@ export default{
     },
     //退出登录
     logout() {
-      this.$router.push('/login')
+      this.$router.push('/')
+    },
+    // 获取当前登录员工的资料
+    getygzl(){
+      this.dlyg=JSON.parse(localStorage.getItem("loginuser"))
     }
   },
   created() {
-
+    this.getygzl()
   }
 }
 </script>
@@ -462,30 +485,25 @@ export default{
   line-height: 400px; */
 }
 
-.el-submenu .el-menu-item {
+.el-submenu {
   height: 50px;
   line-height: 29px;
   padding: 0 45px;
   min-width: 200px;
 }
 
-.elformbd .el-row .el-col .el-form-item .el-form-item__label {
-  width: 80px;
-}
 
 .bjtp{
   background-color: white;
 }
 .drawer2{
-  margin-left: 100px;
+  margin-left: 20px;
   width: 300px;
 }
+
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 100px;
   min-height: 400px;
-}
-.router-link-active {
-  text-decoration: none;
 }
 a {
   text-decoration: none;

@@ -114,7 +114,7 @@ export default {
                   return
                 }
                 if(responsee.data.code === 200){
-                  // this.$store.state.token = responsee.data.data;
+                  this.$store.commit("login",responsee.data.data)
                   // sessionStorage.setItem("token",JSON.stringify(responsee.data.data))
                   //存state
                   this.$router.push('/zhuye')
