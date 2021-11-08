@@ -1,5 +1,5 @@
 <template>
-	<div id="big_div">
+	<div id="big_div" v-show="!showif">
 		<div id="div_top">
 			 <el-select v-model="value" 
 			 @change="pickLx(value)"
@@ -143,6 +143,8 @@
 			</div>
 		</div>
 	</el-dialog>
+	<!-- 空状态 -->
+	<el-empty description="description" v-show="showif"></el-empty>
 	<!--  -->
 </template>
 
@@ -183,7 +185,8 @@
 				intime: '',
 				ntid:0,
 				intext:'',//姓名
-				lyid:0
+				lyid:0,
+				showif:false//空状态的显示
 			}
 		},
 		methods: {
@@ -297,6 +300,9 @@
 						this.total=res.data.total;
 						this.pageNo=res.data.pageNum;
 						this.pageSize=res.data.pageSize;
+					}
+					if(res.data.list.length==0){
+						this.showif=true;
 					}
 				})
 			},

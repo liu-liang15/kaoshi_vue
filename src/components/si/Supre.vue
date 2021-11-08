@@ -62,7 +62,8 @@
 						</el-col>
 						<el-col :span="12">
 							<el-form-item label="身份证号码" prop="cardnum" id="input_width">
-								<el-input v-model="cardnum"></el-input>
+								<!-- @change="sfz()" -->
+								<el-input v-model="cardnum" @change="sfz()"></el-input>
 							</el-form-item>
 						</el-col>
 					</el-row>
@@ -116,7 +117,7 @@
 						</el-col>
 						<el-col :span="12">
 							<el-form-item label="收定人" id="input_width"  style="width: 193px;">
-								<el-input style="margin-left: 13px;"></el-input>
+								<el-input style="margin-left: 13px;" v-model="peo"></el-input>
 							</el-form-item>
 						</el-col>
 						
@@ -184,6 +185,7 @@
 	export default {
 		data() {
 			return {
+				peo:'',
 				value1:'',//时间
 				surepageSize:5,
 				surepageNo:1,
@@ -210,6 +212,10 @@
 				
 			}
 		},methods:{
+			sfz(){
+				console.log(this.cardnum,"111");
+				
+			},
 			searchLike(){
 				  this.axios.post("customer/morelike",{
 					cname:this.name,
@@ -269,34 +275,40 @@
 				 })
 				 this.ydform=false;
 			},
-			pickUser(item){
+			pickUser(item){//选择用户
 				 this.axios.post("customer/byname",{
 					cname:item
 				}).then(res=>{
 					console.log(res,"选择用户的值直至");
-					if(res.data.cardnum!=''){
+					if(res.data!=""){
 						this.cardnum=res.data.cardnum;
 						this.ctel=res.data.ctel;
 						this.csex=res.data.csex;
 						this.scid=res.data.cid;
 						this.kyorigins.push(res.data.ctype.tname);
-						if(res.data.kyUneeds.length!=0){
-							this.dzorigin=res.data.kyUneeds[0].uaddress;
-							let obj = {
-								city:this.dzorigin 
-							}
-							 /* 转换成对象的格式 */
-							let newObj = qs.stringify(obj);
-							 this.axios.post("surepre/byhname",newObj).then(res=>{
-								console.log(res,"根据地址查询的res");
-								this.markMon=res.data.houseFloorPrice*0.8;
+						// if(res.data.kyUneeds.length!=0){
+						// 	this.dzorigin=res.data.kyUneeds[0].uaddress;
+						// 	let obj = {
+						// 		city:this.dzorigin 
+						// 	}
+						// 	 /* 转换成对象的格式 */
+						// 	let newObj = qs.stringify(obj);
+						// 	 this.axios.post("surepre/byhname",newObj).then(res=>{
+						// 		console.log(res,"根据地址查询的res");
+						// 		this.markMon=res.data.houseFloorPrice*0.8;
 								 
-							})
-						}
+						// 	})
+						// }
 						 
 					}
 					console.log(res,"查询用户的信息:");
 				})
+			},
+			getygzl(){
+			  this.dlyg=JSON.parse(localStorage.getItem("loginuser"));
+			  console.log(this.dlyg,"获取登录的数据")
+			  this.peo=this.dlyg.ygName;
+			  this.peoid=this.dlyg.ygId;//收定人编号
 			},
 			sureSizeChange(val){
 				this.surepageSize = val;
@@ -327,12 +339,13 @@
 					 
 				})
 			},
-			// customer/byname
+			 
 			
 		},mounted() {
 			this.loadUsers();
 			this.loadAccount();
 			this.loadData();
+			this.getygzl();
 		}
 	}
 </script>
