@@ -149,7 +149,7 @@
 									<template #default="scope">
 										<el-button type="text" size="small" @click="updateCwAccountstate(scope.row)">修改状态</el-button>
 										<el-button type="text" size="small" @click="showEdit(scope.row)">编辑</el-button>
-										<el-button type="text" size="small" @click="delCwAccount(scope.row)">删除</el-button>
+<!--										<el-button type="text" size="small" @click="delCwAccount(scope.row)">删除</el-button>-->
 									</template>
 								</el-table-column>
 							</el-table>
@@ -191,7 +191,7 @@
 							</el-form-item>
 						</el-form>
 					</el-dialog>
-					
+
 					<!-- 修改企业账户信息 -->
 					<el-dialog title="修改企业账户" v-model="bjjs" width="30%" :before-close="handleClose">
 						<el-form :model="form2" :rules="rules" label-width="100px" class="demo-ruleForm">

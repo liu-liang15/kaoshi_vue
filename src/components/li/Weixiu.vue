@@ -1,6 +1,6 @@
 <template>
-	<el-tabs>
-		<el-tab-pane label="租约变更" name="zybg">
+	<el-tabs v-model="wljjm">
+		<el-tab-pane label="维修申请" name="zybg">
 			<div>
 				<el-row>
 					<el-button type="primary">全部</el-button>
@@ -19,7 +19,7 @@
 					维修类型：<el-select v-model="zhwxlxs" placeholder="请选择维修类型">
 						<el-option v-for="zh in zhwxlx" :key="zh.lxName" :label="zh.lxName" :value="zh.lxName">
 						</el-option>
-					</el-select> 
+					</el-select>
 					&nbsp;
 					工人：<el-select v-model="zhwxgrs" placeholder="请选择工人">
 						<el-option v-for="zr in zhwxgr" :key="zr.grName" :label="zr.grName" :value="zr.grName">
@@ -30,14 +30,14 @@
 					</el-date-picker>
 					&nbsp;
 					<el-input v-model="input" style="width:200px;" placeholder="请输入内容"></el-input>
-					
+
 					<el-button plain size="small" style="margin-left:10px;background-color: royalblue;color: white;" @click="selectGroup()"
 					 icon="el-icon-search">查询
 					</el-button>
 
-					
-					<!-- 
-					新增、修改维修单 
+
+					<!--
+					新增、修改维修单
 					 -->
 					<el-dialog :title="dialogType" v-model="dialogFormVisible">
 
@@ -193,8 +193,8 @@
 					 icon="el-icon-search">查询
 					</el-button>
 
-					<!-- 
-					新增、修改维修单 
+					<!--
+					新增、修改维修单
 					 -->
 					<el-dialog :title="dialogType" v-model="dialogFormVisible">
 
@@ -316,10 +316,6 @@
 				</el-pagination>
 			</div>
 		</el-tab-pane>
-
-
-		<el-tab-pane label="租约变更" name="third"></el-tab-pane>
-
 	</el-tabs>
 
 
@@ -334,6 +330,7 @@
 	export default {
 		data() {
 			return {
+			  wljjm: 'zybg',
 				pageInfo: {
 					page: 1,
 					pageSize: 5,
@@ -367,7 +364,7 @@
 				people: [], //用来存储可新增的驾驶员数据
 				form: {
 
-				}, //新增表单  
+				}, //新增表单
 				formedit: {
 
 				}, //编辑表单
@@ -396,7 +393,7 @@
 			// 			console.log(error)
 			// 		})
 			// },
-			
+
 			selectone() {
 				const _this = this;
 				var fd = {
@@ -444,7 +441,7 @@
 					jjId: '',
 					wxReason: '',
 					fwId: '',
-
+          ztIds:''
 				}
 				this.dialogType = '新增';
 				this.dialogFormVisible = true;
@@ -460,9 +457,10 @@
 					this.zhweiform1.pdDate == uu
 					console.log(this.zhweiform1)
 					this.axios.post("update", this.zhweiform1).then(req => {
-						alert("修改成功")
+						alert("派单成功")
 						this.selectzhwxlx();
-						_this.updatezt()
+            this.created1();
+            this.dialogFormVisible1=false
 					})
 
 				} else {
@@ -495,6 +493,8 @@
 					console.log(this.zhweiform)
 					this.axios.post("insertBatch", this.zhweiform).then(req => {
 						alert("新增成功")
+            this.dialogFormVisible=false
+            this.created1();
 					})
 
 				} else {
