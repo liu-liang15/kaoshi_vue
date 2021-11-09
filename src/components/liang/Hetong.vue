@@ -379,17 +379,20 @@ import { defineComponent, ref } from 'vue'
               })
             })
       },
-      opensc() {
+      opensc(rzId) {
         this.$confirm('删除同住人？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
         })
             .then(() => {
-              this.$message({
-                type: 'success',
-                message: '删除成功!',
+              this.axios("sctz/"+rzId).then(req=>{
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!',
+                })
               })
+
             })
             .catch(() => {
               this.$message({

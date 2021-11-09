@@ -117,7 +117,7 @@ export default {
                   this.$store.commit("login",responsee.data.data)
                   // sessionStorage.setItem("token",JSON.stringify(responsee.data.data))
                   //存state
-                  this.$router.push('/zhuye')
+                  this.$router.push('/appointment')
                 }
                 this.loading = false
               }

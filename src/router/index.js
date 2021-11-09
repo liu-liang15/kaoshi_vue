@@ -51,8 +51,13 @@ const routes = [
 		// 	//易湘君
 			{
 				path: '/children1',
-				component:import('/src/components/liang/Hetong.vue'),
+				component:import('/src/components/xiang/houseing.vue'),
 				name: '房源'
+			},
+			{
+				path: '/children11',
+				component:import('/src/components/xiang/pipe.vue'),
+				name: '房管'
 			},
 		// 	//刘亮
 			{

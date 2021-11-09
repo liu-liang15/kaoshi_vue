@@ -31,17 +31,15 @@
 								</el-table-column>
 								<el-table-column prop="budgetsTime" min-width="50" label="收支时间" align="center">
 								</el-table-column>
-								<el-table-column prop="costDescription" min-width="50" label="费用描述" align="center">
+								<el-table-column prop="costDescription" min-width="30" label="费用描述" align="center">
 								</el-table-column>
-								<el-table-column prop="costCyclestart" min-width="50" label="费用周期" align="center">
+								<el-table-column prop="htRuZhur.name" min-width="30" label="收/付款方" align="center">
 								</el-table-column>
-								<el-table-column prop="htRuZhur.name" min-width="30" label="收付款方" align="center">
-								</el-table-column>
-								<el-table-column prop="htRuZhur.phone" min-width="50" label="电话" align="center">
+								<el-table-column prop="htRuZhur.phone" min-width="30" label="电话" align="center">
 								</el-table-column>
 								<el-table-column prop="state" min-width="30" label="状态" align="center">
 									<template #default="scope">
-										<p v-if="scope.row.state==0" style="color: #483D8B;">待收款</p>
+										<p v-if="scope.row.state==0" style="color: skyblue;">待收款</p>
 										<p v-if="scope.row.state==1" style="color: red;">待付款</p>
 										<p v-if="scope.row.state==2" style="color: gold;">待审核</p>
 										<p v-if="scope.row.state==3" style="color: greenyellow;">审核成功</p>
@@ -54,7 +52,7 @@
 										<el-button type="text" size="small" @click="updateCwFinancestate1(scope.row)">付款</el-button>
 										<el-button type="text" size="small" @click="updateCwFinancestate1(scope.row)">审核</el-button>
 										<el-button type="text" size="small" @click="updateCwFinancestate1(scope.row)">取消审核</el-button>
-										<el-button type="text" size="small" @click="showEdit(scope.row)">查看</el-button>
+										<el-button type="text" size="small" @click="updateCwFinancestate2(scope.row)">驳回</el-button>
 									</template>
 								</el-table-column>
 							</el-table>
@@ -70,29 +68,28 @@
 					<!-- 新增财务收支记录 -->
 					<el-dialog title="添加记账" v-model="finance" width="30%" :before-close="handleClose">
 						<el-form :model="form" label-width="100px" class="demo-ruleForm">
+							<el-form-item label="入住人 :">
+								<el-select style="width: 335px;" v-model="form.rzId" placeholder="请选择" autocomplete="off">
+									<el-option v-for="item in RzrData" :key="item.value" :label="item.name" :value="item.rzId">
+									</el-option>
+								</el-select>
+							</el-form-item>
 							<el-form-item label="费用类型 :">
 								<el-select style="width: 335px;" v-model="form.costtypeId" placeholder="请选择" autocomplete="off">
 									<el-option v-for="item in CwCosttypeData" :key="item.value" :label="item.costtypeName" :value="item.costtypeId">
 									</el-option>
 								</el-select>
 							</el-form-item>
-							<el-form-item label="银行卡号码:" prop="number">
-								<el-input v-model.number="form.number"></el-input>
+							<el-form-item label="金额:" prop="money">
+								<el-input v-model="form.money"></el-input>
 							</el-form-item>
-							<el-form-item label="持卡人姓名:" prop="cardholderName">
-								<el-input v-model="form.cardholderName"></el-input>
+							<el-form-item label="费用周期" prop="sjxzq">
+								<el-date-picker style="width: 335px;" v-model="sjxzq" type="daterange" range-separator="至" start-placeholder="开始日期"
+								 end-placeholder="结束日期">
+								</el-date-picker>
 							</el-form-item>
-							<el-form-item label="开户行" prop="bank">
-								<el-input v-model="form.bank"></el-input>
-							</el-form-item>
-							<el-form-item label="支行全称" prop="bankName">
-								<el-input v-model="form.bankName"></el-input>
-							</el-form-item>
-							<el-form-item label="商户号" prop="merchant">
-								<el-input v-model="form.merchant"></el-input>
-							</el-form-item>
-							<el-form-item label="备注" prop="remarks">
-								<el-input v-model="form.remarks"></el-input>
+							<el-form-item label="费用描述:" prop="costDescription">
+								<el-input v-model="form.costDescription"></el-input>
 							</el-form-item>
 							<el-form-item class="el-form-butt-show-one-s">
 								<el-button type="primary" @click="addCwFinance">立即创建</el-button>
@@ -152,7 +149,7 @@
 									<template #default="scope">
 										<el-button type="text" size="small" @click="updateCwAccountstate(scope.row)">修改状态</el-button>
 										<el-button type="text" size="small" @click="showEdit(scope.row)">编辑</el-button>
-										<el-button type="text" size="small" @click="delCwAccount(scope.row)">删除</el-button>
+<!--										<el-button type="text" size="small" @click="delCwAccount(scope.row)">删除</el-button>-->
 									</template>
 								</el-table-column>
 							</el-table>
@@ -196,28 +193,31 @@
 					</el-dialog>
 
 					<!-- 修改企业账户信息 -->
-					<el-dialog title="修改企业账户信息" v-model="bjjs">
-						<el-form :model="form2" label-width="90px" size="mini">
-							<el-form-item label="账户名称 :" style="margin-left: 170px;">
-								<el-input style="width: 300px;margin-left: -148px;" v-model="form2.accountName" clearable></el-input>
+					<el-dialog title="修改企业账户" v-model="bjjs" width="30%" :before-close="handleClose">
+						<el-form :model="form2" :rules="rules" label-width="100px" class="demo-ruleForm">
+							<el-form-item label="账户名称:" prop="accountName">
+								<el-input v-model="form2.accountName"></el-input>
 							</el-form-item>
-							<el-form-item label="银行卡号码 :" style="margin-left: 170px;">
-								<el-input style="width: 300px;margin-left: -148px;" v-model="form2.number" clearable></el-input>
+							<el-form-item label="银行卡号码:" prop="number">
+								<el-input v-model.number="form2.number"></el-input>
 							</el-form-item>
-							<el-form-item label="持卡人姓名 :" style="margin-left: 170px;">
-								<el-input style="width: 300px;margin-left: -148px;" v-model="form2.cardholderName" clearable></el-input>
+							<el-form-item label="持卡人姓名:" prop="cardholderName">
+								<el-input v-model="form2.cardholderName"></el-input>
 							</el-form-item>
-							<el-form-item label="开户行 :" style="margin-left: 170px;">
-								<el-input style="width: 300px;margin-left: -148px;" v-model="form2.bank" clearable></el-input>
+							<el-form-item label="开户行" prop="bank">
+								<el-input v-model="form2.bank"></el-input>
 							</el-form-item>
-							<el-form-item label="商户号 :" style="margin-left: 170px;">
-								<el-input style="width: 300px;margin-left: -148px;" v-model="form2.merchant" clearable></el-input>
+							<el-form-item label="支行全称" prop="bankName">
+								<el-input v-model="form2.bankName"></el-input>
 							</el-form-item>
-							<el-form-item label="备注 :" style="margin-left: 170px;">
-								<el-input style="width: 300px;margin-left: -148px;" v-model="form2.remarks" clearable></el-input>
+							<el-form-item label="商户号" prop="merchant">
+								<el-input v-model="form2.merchant"></el-input>
 							</el-form-item>
-							<el-form-item size="large">
-								<el-button type="primary" style="margin-left: -100px;" @click="updateCwAccount">更新</el-button>
+							<el-form-item label="备注" prop="remarks">
+								<el-input v-model="form2.remarks"></el-input>
+							</el-form-item>
+							<el-form-item class="el-form-butt-show-one-s">
+								<el-button type="primary" @click="updateCwAccount">更新</el-button>
 								<el-button @click="bjjs=false">关闭</el-button>
 							</el-form-item>
 						</el-form>
@@ -295,6 +295,7 @@
 				}, 1000)
 			}
 			return {
+				sjxzq: '',
 				Account: "first",
 
 				// -------------------------------财务收支---------------------------------------
@@ -318,6 +319,8 @@
 				}, //财务收支分页
 				CwFinanceData: [], //财务收支数组
 				finance: false,
+				state1: false,
+				RzrData: [],
 
 
 
@@ -335,7 +338,7 @@
 					remarks: "",
 					accountState: ""
 				}, //企业账户表单
-				bjjs1: false,
+				bjjs: false,
 				pageInfo2: {
 					value: "",
 					input1: "",
@@ -439,10 +442,14 @@
 			}
 		},
 		methods: {
-			// ------------------------------------------------ 企业账户增删改查方法 -------------------------------------------------------
-			//增加企业账户
+			// ------------------------------------------------ 财务收支增删改查方法 -------------------------------------------------------
+			//增加财务收支
 			addCwFinance() {
 				const _this = this
+				var time1 = this.sjxzq[0].getFullYear() + "-" + (this.sjxzq[0].getMonth() + 1) + "-" + this.sjxzq[0].getDate();
+				var time2 = this.sjxzq[1].getFullYear() + "-" + (this.sjxzq[1].getMonth() + 1) + "-" + this.sjxzq[1].getDate();
+				this.form.costCyclestart = time1
+				this.form.costCycleend = time2
 				this.axios.post("http://localhost:8848/addCwFinance", this.form)
 					.then(function(response) {
 						_this.axios.get("http://localhost:8848/selectAllCwFinance", {
@@ -454,7 +461,7 @@
 							}).catch(function(error) {
 								console.log(error)
 							})
-						_this.role = false
+						_this.finance = false
 						for (var key in _this.form) {
 							delete _this.form[key]
 						}
@@ -463,7 +470,7 @@
 					})
 			},
 
-			//修改企业账户状态
+			//修改财务收支状态1
 			updateCwFinancestate1(row) {
 				const _this = this
 				var flag = true
@@ -498,18 +505,40 @@
 				});
 			},
 
-			//修改
-			// showEdit1(row) {
-			// 	this.form2.accountId = row.accountId
-			// 	this.form2.accountName = row.accountName
-			// 	this.form2.number = row.number
-			// 	this.form2.cardholderName = row.cardholderName
-			// 	this.form2.bank = row.bank
-			// 	this.form2.bankName = row.bankName
-			// 	this.form2.merchant = row.merchant
-			// 	this.form2.remarks = row.remarks
-			// 	this.bjjs = true
-			// },
+			//修改财务收支状态2
+			updateCwFinancestate2(row) {
+				const _this = this
+				var flag = true
+				this.$confirm('此操作将修改财务收支状态, 是否继续?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: 'warning'
+				}).then(() => {
+					_this.axios.put("http://localhost:8848/updateCwFinancestate2", row)
+						.then(function(response) {
+							_this.axios.get("http://localhost:8848/selectAllCwFinance", {
+									params: _this.pageInfo
+								})
+								.then(function(response) {
+									console.log(response)
+									_this.CwFinanceData = response.data.list
+									_this.pageInfo.total = response.data.total
+								}).catch(function(error) {
+									console.log(error)
+								})
+							for (var key in _this.form) {
+								delete _this.form[key]
+							}
+						}).catch(function(error) {
+							console.log(error)
+						})
+				}).catch(() => {
+					this.$message({
+						type: 'error',
+						message: '取消修改!'
+					});
+				});
+			},
 
 			//多条件查询
 			selectCwFinance() {
@@ -671,6 +700,16 @@
 				const _this = this
 				this.axios.put("http://localhost:8848/updateCwAccount", this.form2)
 					.then(function(response) {
+						_this.axios.get("http://localhost:8848/selectAllCwAccount", {
+								params: _this.pageInfo2
+							})
+							.then(function(response) {
+								console.log(response)
+								_this.CwAccountData = response.data.list
+								_this.pageInfo2.total = response.data.total
+							}).catch(function(error) {
+								console.log(error)
+							})
 						var cwaccount = response.data
 						var row = _this.CwAccountData.filter(t => t.accountId == cwaccount.accountId)[0]
 						_this.bjjs = false
@@ -879,6 +918,17 @@
 					console.log(response)
 					_this.CwFinanceData = response.data.list
 					_this.pageInfo.total = response.data.total
+				}).catch(function(error) {
+					console.log(error)
+				})
+
+			//查询所有入住人
+			this.axios.get("http://localhost:8848/selectAllRzr", {
+					params: this.pageInfo
+				})
+				.then(function(response) {
+					console.log(response)
+					_this.RzrData = response.data
 				}).catch(function(error) {
 					console.log(error)
 				})

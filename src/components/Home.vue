@@ -76,6 +76,12 @@
           </el-menu-item>
         </router-link>
 
+        <router-link  :to="{path:'/children11'}">
+          <el-menu-item index="6">
+            <template #title> 房 管 </template>
+          </el-menu-item>
+        </router-link>
+
       </el-menu>
 
 
