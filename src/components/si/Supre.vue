@@ -9,7 +9,9 @@
 				  plain 
 				   @click="searchLike()"
 				  style="margin-left:20px;background-color:skyblue ;color: white;" >查询</el-button>
-			<el-button plain size="small" style="background-color: lightcoral;color: white;margin-left: 13px;" @click="addPred()">
+			<el-button plain size="small" 
+			style="background-color: lightcoral;color: white;margin-left: 13px;"
+			 @click="addPred()">
 				 新增预定
 			</el-button>
 			<el-button plain size="small" style="background-color: yellowgreen;color: white;margin-left: 13px;"
@@ -22,19 +24,14 @@
 		 <!-- 客源表格    -->
 		<div id="div_user">
 			 <el-table :data="custominfo" style="width: 100%">
-				 <el-table-column   label="预定状态" prop="kysurepres[0].kystatu.tname"> </el-table-column>
+				 <el-table-column   label="预定状态" prop="kysurepres[0].kystatu.tname">
+				 </el-table-column>
 				 <el-table-column   label="姓名" width="80" prop="cname"> </el-table-column>
 			    <el-table-column   label="电话" width="180" prop="ctel"> </el-table-column>
 			     <el-table-column   label="定金金额" prop="kysurepres[0].smoney"> </el-table-column>
 				<el-table-column   label="预定时间" prop="kysurepres[0].sutime"></el-table-column>
 				 <el-table-column   label="房源地址" prop="kyUneeds[0].uddress"> </el-table-column>
-				<el-table-column   label="相关操作"> 
-				<template #default="scope">
-					 <el-button size="mini" type="success" plain style="margin-left:2px;"
-						 >签约</el-button>
-				</template>
-				</el-table-column>
-			  </el-table>
+				 </el-table>
 			   <!-- 分页组件 -->
 			   <el-pagination @size-change="sureSizeChange" @current-change="sureCurrentChange" :current-page="surepageNo"
 			   	:page-sizes="[1,5]" :page-size="surepageSize" layout="total, sizes, prev, pager, next, jumper" :total="suretotal">
@@ -62,8 +59,7 @@
 						</el-col>
 						<el-col :span="12">
 							<el-form-item label="身份证号码" prop="cardnum" id="input_width">
-								<!-- @change="sfz()" -->
-								<el-input v-model="cardnum" @change="sfz()"></el-input>
+								 <el-input v-model="cardnum" @change="sfz()"></el-input>
 							</el-form-item>
 						</el-col>
 					</el-row>
@@ -208,7 +204,8 @@
 				accountId:0,
 				scid:0,
 				custominfo:[],
-				name:''
+				name:'',
+				lempid:''//当前登陆人的编号
 				
 			}
 		},methods:{
@@ -260,13 +257,11 @@
 				 this.untime=moment(bdate).format("YYYY-MM-DD"); 
 			 },
 			addSupre(){//新增的结果
-			// scid 客户信息  stid预定状态
-			console.log(this.intime,this.untime,this.accountId,this.scid,this.markMon,"121")
 			  this.axios.post("surepre/insert",{
 					 sutime:this.intime,
 					 suntime:this.untime,
 					 accountId:this.accountId,
-					 empid:0,//应该和登录账户挂钩
+					 empid:this.peoid,//应该和登录账户挂钩
 					 stid:20,//默认预约状态是待处理
 					 scid:this.scid,
 					 smoney:this.markMon
@@ -279,26 +274,29 @@
 				 this.axios.post("customer/byname",{
 					cname:item
 				}).then(res=>{
-					console.log(res,"选择用户的值直至");
+					console.log(res,"1111111111111111选择用户的值直至");
 					if(res.data!=""){
 						this.cardnum=res.data.cardnum;
+						// 字符串*替换
+						let str=res.data.cardnum.substr(4,14);
+						console.log(str,"截取到的数据")
 						this.ctel=res.data.ctel;
 						this.csex=res.data.csex;
 						this.scid=res.data.cid;
 						this.kyorigins.push(res.data.ctype.tname);
-						// if(res.data.kyUneeds.length!=0){
-						// 	this.dzorigin=res.data.kyUneeds[0].uaddress;
-						// 	let obj = {
-						// 		city:this.dzorigin 
-						// 	}
-						// 	 /* 转换成对象的格式 */
-						// 	let newObj = qs.stringify(obj);
-						// 	 this.axios.post("surepre/byhname",newObj).then(res=>{
-						// 		console.log(res,"根据地址查询的res");
-						// 		this.markMon=res.data.houseFloorPrice*0.8;
+						if(res.data.kyUneeds.length!=0){
+							this.dzorigin=res.data.kyUneeds[0].uddress;
+							let obj = {
+								city:this.dzorigin 
+							}
+							//  /* 转换成对象的格式 */
+							let newObj = qs.stringify(obj);
+							 this.axios.post("surepre/byhname",newObj).then(res=>{
+								console.log(res,"根据地址查询的res");
+								this.markMon=res.data.houseFloorPrice*0.8;
 								 
-						// 	})
-						// }
+							})
+						}
 						 
 					}
 					console.log(res,"查询用户的信息:");
@@ -309,6 +307,7 @@
 			  console.log(this.dlyg,"获取登录的数据")
 			  this.peo=this.dlyg.ygName;
 			  this.peoid=this.dlyg.ygId;//收定人编号
+			  console.log(this.peoid,"this.peoid")
 			},
 			sureSizeChange(val){
 				this.surepageSize = val;

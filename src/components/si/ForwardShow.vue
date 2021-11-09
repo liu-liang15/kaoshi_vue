@@ -74,14 +74,14 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="租客性别" prop="csex" id="input_width">
+							<el-form-item label="租客性别"   id="input_width">
 								<el-input style="margin-left:13px;width: 160px;" v-model="csex"></el-input>
 							</el-form-item>
 						</el-col>
 					</el-row>
 					<el-row>
 						<el-col :span="12">
-							<el-form-item label="租客电话" prop="ctel" id="input_width">
+							<el-form-item label="租客电话"   id="input_width">
 								<el-input v-model="ctel"></el-input>
 							</el-form-item>
 						</el-col>
@@ -168,6 +168,7 @@
 					pageNo:this.pageNo,
 					pageSize:this.pageSize
 				}).then(res => {
+					console.log(res,"qqqqqqqqqq获取到的查询结果")
 					 if(res.data.list.length!=0){
 					this.custominfo=res.data.list;	
 					}
@@ -230,9 +231,7 @@
 				this.axios.post("customer/byname", {
 					cname: item
 				}).then(res => {
-
-					console.log(res, "选择用户的值直至");
-					if (res.data.cardnum != '') {
+					if (res.data.cardnum) {
 						this.cardnum = res.data.cardnum;
 						this.ctel = res.data.ctel;
 						this.csex = res.data.csex;

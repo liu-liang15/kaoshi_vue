@@ -1,5 +1,5 @@
 <template>
-	<div id="big_div" v-show="!showif">
+	<div id="big_div">
 		<div id="div_top">
 			 <el-select v-model="value" 
 			 @change="pickLx(value)"
@@ -53,12 +53,16 @@
 					<el-row>
 						<el-col :span="12">
 							<el-form-item label="姓名" prop="cname" id="input_width">
-								<el-input v-model="cname"></el-input>
+								<el-input 
+								
+								v-model="cname"></el-input>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
 							<el-form-item label="身份证号码" prop="cardnum" id="input_width">
-								<el-input v-model="cardnum"></el-input>
+								<el-input 
+								@blur="sfz()"
+								v-model="cardnum"></el-input>
 							</el-form-item>
 						</el-col>
 					</el-row>
@@ -86,12 +90,7 @@
 								<el-input v-model="csex"></el-input>
 							</el-form-item>
 						</el-col>
-						<el-col :span="12">
-							<el-form-item label="租客年龄" prop="cage" id="input_width">
-								<el-input style="margin-left:13px;width: 160px;" v-model="cage"></el-input>
-							</el-form-item>
-						</el-col>
-					</el-row>
+					 </el-row>
 				</el-form-item>
 			</el-form>
 			<div id="div_need" style="width: 670px;">需求信息</div>
@@ -143,13 +142,15 @@
 			</div>
 		</div>
 	</el-dialog>
-	<!-- 空状态 -->
-	<el-empty description="description" v-show="showif"></el-empty>
+	 
 	<!--  -->
 </template>
 
 <script>
 	import moment from 'moment'
+	import {
+		ElMessage
+	} from 'element-plus'
 	export default {
 		data() {
 			return {
@@ -186,10 +187,28 @@
 				ntid:0,
 				intext:'',//姓名
 				lyid:0,
-				showif:false//空状态的显示
+				peos:[]
+				 
 			}
 		},
 		methods: {
+			loadPeos(){
+				this.axios.post("customer/mess").then(res=>{
+					 this.peos=res.data;
+				})
+			},
+			sfz(){
+				if(this.cardnum.length==18){
+					let num=this.cardnum.charAt(17);
+					console.log(num,"num");	
+					if (num%2==0){//性别
+						this.csex='女';
+					}else{
+						this.csex='男';
+					}
+				 }
+			
+			},
 			pickLx(item){
 				console.log(item,"item")
 				if(item!=''){
@@ -237,31 +256,70 @@
 				}
 			},
 			addcus() { //新增客源
-				 this.axios.get("customer/add", {
-					params: {
-						cname: this.cname,
-						ctel: this.ctel,
-						cardnum: this.cardnum,
-						csex: this.csex,
-						cTypeid: this.typeid
-					}
-				}).then(res => {
-					 let time=moment(this.intime).format('yyyy-MM-DD HH:mm:ss');
-					 // 出租类型    
-					if(res.data!=0){
-						this.axios.post("uneed/add",{
-							     ucid:res.data,
-							     uinitime:time,
-							     utenancytid:this.ntid,
-							      uaddress:this.addres
-						}).then(res=>{
-							console.log(res, "客源需求")
-							this.loadData();
-						})
-					}
+			if(this.cname==''||this.ctel==''){
+			ElMessage.warning({
+				message: '数据为空',
+				type: 'warning'
+			}) 
+			return;	
+			}
+			if(this.cardnum==''||this.cardnum.length<18){
+				ElMessage.warning({
+					message: '身份证号码不符合规范',
+					type: 'warning'
+				}) 
+				return;
+			}
+			this.peos.forEach(res=>{
+				console.log(res,"遍历的东西");
+				 if(this.cname==res.cname && this.cardnum==res.cardnum){
+					ElMessage.warning({
+						message: '该客户已存在',
+						type: 'warning'
+					}) 
+					this.cname='';
+					this.cardnum='';
+					this.form=false;
+					 return;
+				}
+			})
+			 
+			// 判断数据库里面是否已经存在了该客户信息
+			
+			// this.axios.post("customer/ifexist",{
+			// 	cname:this.cname,
+			// 	  cardnum:this.cardnum
+			// }).then(res=>{
+			// 	console.log(res,"判断是否存在")
+			// })
+			
+			
+			// 
+	// 			 this.axios.get("customer/add", {//新增
+	// 				params: {
+	// 					cname: ,
+	// 					ctel: this.ctel,
+	// 					cardnum: this.cardnum,
+	// 					csex: this.csex,
+	// 					cTypeid: this.typeid
+	// 				}
+	// 			}).then(res => {
+	// 				 let time=moment(this.intime).format('yyyy-MM-DD HH:mm:ss');
+	// 				 // 出租类型    
+	// 				if(res.data!=0){
+	// 					this.axios.post("uneed/add",{
+	// 						     ucid:res.data,
+	// 						     uinitime:time,
+	// 						     utenancytid:this.ntid,
+	// 						      uaddress:this.addres
+	// 					}).then(res=>{
+	// 						console.log(res, "客源需求")
+	// 						this.loadData();
+	// 					})
+	// 				}
 
  
-				})
+	// 			})
 				this.form = false;
 			},
 			jumpYy() {
@@ -328,6 +386,7 @@
 			this.loadHouse();
 			this.loadNeeds();
 			this.loadData();
+			this.loadPeos();
 		 
 		}
 	}
