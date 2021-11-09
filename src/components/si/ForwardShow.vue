@@ -52,7 +52,7 @@
         <el-form-item>
           <el-row>
             <el-col :span="24">
-              <el-form-item label="约看房源" id="input_width" style="width:518px;">
+              <el-form-item label="约看房源" id="input_width" style="width:558px;">
                 <el-select @change="pickAddress(origin)" v-model="origin" placeholder="约看房源"
                            clearable="true" size="medium" style="margin-left:13px;width: 518px;">
                   <el-option v-for="item in origins" :key="item.city" :label="item.city"
